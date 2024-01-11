@@ -178,7 +178,7 @@ def statusVideo():
     return resp
 
 
-@app.route("/ffmpeg/start/", methods = ['POST'])
+@app.route("/ffmpeg/start/")
 def startVideo():
     resp.headers.add('Access-Control-Allow-Origin', '*')
     if request.method == 'POST':
