@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
+    <script src="{{url_for('static', filename='main.js')}}"></script>
+    <title>Home</title>
+</head>
+<body>
+    <div id="main-div">
+        <div id="list-div">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Use</th>
+                        <th>Camara url</th>
+                        <th>Codec</th>
+                        <th>Bitrate (Mb)</th>
+                        <th>Stream name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="checkbox">
+                        </td>
+                        <td>
+                            <input type="text" value="rtsp://admin:Ac153011..@172.16.0.254:554/h265/ch1/main/av_stream">
+                        </td>
+                        <td>
+                            <select name="codecs" id="codecs-select">
+                                <option value="hevc_nvenc">h265</option>
+                                <option value="libx264">h264</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" value="10">
+                            <span>Mb/s</span>
+                        </td>
+                        <td>
+                            <input type="text" value="Stream">
+                            <span>.m3u8</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox">
+                        </td>
+                        <td>
+                            <input type="text" value="rtsp://admin:Ac153011..@172.16.0.254:554/h265/ch1/main/av_stream">
+                        </td>
+                        <td>
+                            <select name="codecs" id="codecs-select">
+                                <option value="hevc_nvenc">h265</option>
+                                <option value="libx264">h264</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" value="10">
+                            <span>Mb/s</span>
+                        </td>
+                        <td>
+                            <input type="text" value="Stream">
+                            <span>.m3u8</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox">
+                        </td>
+                        <td>
+                            <input type="text" value="rtsp://admin:Ac153011..@172.16.0.254:554/h265/ch1/main/av_stream">
+                        </td>
+                        <td>
+                            <select name="codecs" id="codecs-select">
+                                <option value="hevc_nvenc">h265</option>
+                                <option value="libx264">h264</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" value="10">
+                            <span>Mb/s</span>
+                        </td>
+                        <td>
+                            <input type="text" value="Stream">
+                            <span>.m3u8</span>
+                        </td>
+                    </tr>
+                    <tr class="active-row">
+                        <td>
+                            <input type="checkbox">
+                        </td>
+                        <td><input type="text" value="rtsp://admin:Ac153011..@172.16.0.254:554/h265/ch1/main/av_stream"></td>
+                        <td>
+                            <select name="codecs" id="codecs-select">
+                                <option value="hevc_nvenc">h265</option>
+                                <option value="libx264">h264</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" value="10">
+                            <span>Mb/s</span>
+                        </td>
+                        <td>
+                            <input type="text" value="Stream">
+                            <span>.m3u8</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="form-div">
+            <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+            <form action = "http://localhost:5000/ffmpeg/start/" target = "dummyframe" method = "post">
+                <p>Enter Command:</p>
+                <p><input id = "ffmpeg-command-text" class= ffmpeg-command-text type = "text" name = "ffmpeg-command" value="ffmpeg -thread_queue_size 4096 -i rtsp://admin:Ac153011..@172.16.0.254:554/h265/ch1/main/av_stream -c:v hevc_nvenc videos/testpython8k.m3u8"/></p>
+                <p><input type = "submit" value = "start" onclick="observerStart()"/></p>
+             </form> 
+        </div>
+        <div id="action-div">
+            <!-- <button onclick="ffmpegStart()"> start </button> -->
+            <button onclick="ffmpegStop()"> stop </button>
+        </div>
+        <div id="status-div">
+            <ul id="resources">
+                <li>
+                    <label for="cpu"> CPU [%]: </label>
+                    <span id="cpu"> 0% </span>
+                </li>
+                <li>
+                    <label for="ram"> RAM [%]: </label>
+                    <span id="ram"> 0% </span>
+                </li>
+                <li>
+                    <label for="gpu"> GPU [%]: </label>
+                    <span id="gpu"> 0% </span>
+                </li>
+                <li>
+                    <label for="vram"> VRAM [%]: </label>
+                    <spana id="vram"> 0% </span>
+                </li>
+                <li>
+                    <label for="decoder"> DECODER [%]: </label>
+                    <span id="decoder"> 0% </span>
+                </li>
+                <li>
+                    <label for="encoder"> ENCODER [%]: </label>
+                    <span id="encoder"> 0% </span>
+                </li>
+            </ul>
+            <div id="ffmpeg-output">
+                <span id="ffmpeg-text"></span>
+                <br>
+                <span id="observer-text"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
