@@ -180,20 +180,22 @@ def statusVideo():
 
 @app.route("/ffmpeg/start/")
 def startVideo():
-    if ffmpegStart(request.form['ffmpeg-command']):
-        resp = jsonify(success= True)
-        resp.headers.add('Access-Control-Allow-Origin', '*')
-        resp.status_code = 200
-        return resp
+    if request.method == "POST":
+        if ffmpegStart(request.form['ffmpeg-command']):
+            resp = jsonify(success= True)
+            resp.headers.add('Access-Control-Allow-Origin', '*')
+            resp.status_code = 200
+            return resp
+        else:
+            resp = jsonify(success= False)
+            resp.status_code = 500
+            resp.headers.add('Access-Control-Allow-Origin', '*')
+            return resp
     else:
         resp = jsonify(success= False)
-        resp.status_code = 500
         resp.headers.add('Access-Control-Allow-Origin', '*')
+        resp.status_code = 402
         return resp
-    # else:
-    #     resp = jsonify(success= False)
-    #     resp.status_code = 402
-    #     return resp
 
 
 @app.route("/observer/start/")
