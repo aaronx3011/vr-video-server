@@ -115,6 +115,7 @@ def utilization() -> jsonify:
         
         resp = jsonify(res)
         resp.status_code = 200
+        resp.headers.add('Access-Control-Allow-Origin', '*')
         return resp
 
     except subprocess.CalledProcessError as e:
@@ -139,6 +140,7 @@ def home():
     return render_template("index.html")
 
 @app.route("/ffmpeg/installed/")
+
 def installed():
     # with tempfile.TemporaryFile() as tempf:
     #     proc = subprocess.Popen(['ffmpeg', '-version'], stdout=subprocess.PIPE)
@@ -151,6 +153,8 @@ def installed():
     # print(res)
     # print(ffmpegInstalled())
     # return f'<HTML><span>{res}</span></HTML>'
+    resp.headers.add('Access-Control-Allow-Origin', '*')
+
     if ffmpegInstalled():
         resp = jsonify(success= True)
         resp.status_code = 200
@@ -167,13 +171,16 @@ def version():
 
 @app.route("/ffmpeg/status/")
 def statusVideo():
+    
     resp = jsonify(active = VIDEO['active'], text = VIDEO['output'], observerText = OBSERVER['output'])
     resp.status_code = 200
+    resp.headers.add('Access-Control-Allow-Origin', '*')
     return resp
 
 
 @app.route("/ffmpeg/start/", methods = ['POST'])
 def startVideo():
+    resp.headers.add('Access-Control-Allow-Origin', '*')
     if request.method == 'POST':
         if ffmpegStart(request.form['ffmpeg-command']):
             resp = jsonify(success= True)
@@ -191,6 +198,7 @@ def startVideo():
 
 @app.route("/observer/start/")
 def startObserver():
+    resp.headers.add('Access-Control-Allow-Origin', '*')
     if observerStart():
         resp = jsonify(success= True)
         resp.status_code = 200
@@ -204,6 +212,7 @@ def startObserver():
 
 @app.route("/ffmpeg/stop/")
 def stopVideo():
+    resp.headers.add('Access-Control-Allow-Origin', '*')
     if ffmpegStop():
         resp = jsonify(success= True)
         resp.status_code = 200
@@ -217,6 +226,7 @@ def stopVideo():
 
 @app.route("/observer/stop/")
 def stopObserver():
+    resp.headers.add('Access-Control-Allow-Origin', '*')
     if observerStop():
         resp = jsonify(success= True)
         resp.status_code = 200
@@ -229,6 +239,7 @@ def stopObserver():
 
 @app.route("/aws/stop/")
 def stopBucket():
+    resp.headers.add('Access-Control-Allow-Origin', '*')
     if awsStop():
         resp = jsonify(success= True)
         resp.status_code = 200
