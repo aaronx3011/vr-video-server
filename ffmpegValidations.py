@@ -178,7 +178,7 @@ def statusVideo():
     return resp
 
 
-@app.route("/ffmpeg/start/", methods = ["POST", "GET"]
+@app.route("/ffmpeg/start/", methods = ["POST", "GET"])
 def startVideo():
     if request.method == "POST":
         if ffmpegStart(request.form['ffmpeg-command']):
