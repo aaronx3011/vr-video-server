@@ -38,6 +38,7 @@ def ffmpegStart(ffmpegCommand) -> bool:
     if VIDEO['active'] == False:
         try:
             process = subprocess.Popen(shlex.split(ffmpegCommand), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+            print(ffmpegCommand)
             VIDEO["active"] = True
             for line in process.stdout:
                 VIDEO["output"] = line[:-1]
@@ -181,7 +182,9 @@ def statusVideo():
 @app.route("/ffmpeg/start/", methods = ["POST", "GET"])
 def startVideo():
     if request.method == "POST":
-        if ffmpegStart(request.form['ffmpeg-command']):
+        data = request.get_json()
+        if ffmpegStart(data["command"]):
+            print("entro aqui")
             resp = jsonify(success= True)
             resp.headers.add('Access-Control-Allow-Origin', '*')
             resp.status_code = 200
@@ -215,14 +218,17 @@ def startObserver():
 
 @app.route("/ffmpeg/stop/")
 def stopVideo():
-    resp.headers.add('Access-Control-Allow-Origin', '*')
     if ffmpegStop():
         resp = jsonify(success= True)
         resp.status_code = 200
+        resp.headers.add('Access-Control-Allow-Origin', '*')
+
         return resp
     else:
         resp = jsonify(success= False)
         resp.status_code = 500
+        resp.headers.add('Access-Control-Allow-Origin', '*')
+
         return resp
 
 
@@ -255,3 +261,8 @@ def stopBucket():
 @app.route("/resources/")
 def resources():
     return utilization()
+
+@app.route("/chart/")
+def chart():
+    return render_template("chart.html")
+
