@@ -6,12 +6,18 @@ import shlex
 # import nvsmi
 # import nvidia_smi
 
+from flask_cors import CORS, cross_origin
+
+
 
 VIDEO = {'active': False, 'output': ''}
 OBSERVER = {'active': False, 'output': ''}
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 def ffmpegInstalled() -> bool:
     try:
@@ -46,7 +52,7 @@ def ffmpegStart(ffmpegCommand) -> bool:
             VIDEO["output"] = ''
         except subprocess.CalledProcessError as e:
             return False
-    return render_template('index.html')
+    return True
 
 
 def observerStart() -> bool:
@@ -116,7 +122,7 @@ def utilization() -> jsonify:
         
         resp = jsonify(res)
         resp.status_code = 200
-        resp.headers.add('Access-Control-Allow-Origin', '*')
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
         return resp
 
     except subprocess.CalledProcessError as e:
@@ -128,14 +134,6 @@ def utilization() -> jsonify:
 
 
 
-# def cpuPercent() -> jsonify:
-#     return jsonify(psutil.cpu_percent())
-
-# def memoryPercent():
-#     return f"Memory utilization: {psutil.virtual_memory().percent}%"
-
-
-
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -143,18 +141,6 @@ def home():
 @app.route("/ffmpeg/installed/")
 
 def installed():
-    # with tempfile.TemporaryFile() as tempf:
-    #     proc = subprocess.Popen(['ffmpeg', '-version'], stdout=subprocess.PIPE)
-    #     # proc.wait()
-    #     # tempf.seek(0)
-    #     return proc
-    
-    # proc = subprocess.Popen(['ffmpeg', '-version'], stdout=subprocess.PIPE).communicate()[0]
-    # res = proc.decode("utf-8")
-    # print(res)
-    # print(ffmpegInstalled())
-    # return f'<HTML><span>{res}</span></HTML>'
-    resp.headers.add('Access-Control-Allow-Origin', '*')
 
     if ffmpegInstalled():
         resp = jsonify(success= True)
@@ -175,29 +161,26 @@ def statusVideo():
     
     resp = jsonify(active = VIDEO['active'], text = VIDEO['output'], observerText = OBSERVER['output'])
     resp.status_code = 200
-    resp.headers.add('Access-Control-Allow-Origin', '*')
+    # resp.headers.add('Access-Control-Allow-Origin', '*')
     return resp
 
 
 @app.route("/ffmpeg/start/", methods = ["POST", "GET"])
 def startVideo():
-    if request.method == "POST":
-        data = request.get_json()
-        if ffmpegStart(data["command"]):
-            print("entro aqui")
-            resp = jsonify(success= True)
-            resp.headers.add('Access-Control-Allow-Origin', '*')
-            resp.status_code = 200
-            return resp
-        else:
-            resp = jsonify(success= False)
-            resp.status_code = 500
-            resp.headers.add('Access-Control-Allow-Origin', '*')
-            return resp
+    resp = jsonify(success= True)
+    # resp.headers.add('Access-Control-Allow-Origin', '*')
+    resp.status_code = 200
+    data = request.get_json()
+    if ffmpegStart(data["command"]):
+        print ("estamos aqui")
+        resp = jsonify(success= True)
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
+        resp.status_code = 200
+        return resp
     else:
         resp = jsonify(success= False)
-        resp.headers.add('Access-Control-Allow-Origin', '*')
-        resp.status_code = 402
+        resp.status_code = 500
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
         return resp
 
 
@@ -205,12 +188,12 @@ def startVideo():
 def startObserver():
     if observerStart():
         resp = jsonify(success= True)
-        resp.headers.add('Access-Control-Allow-Origin', '*')
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
         resp.status_code = 200
         return resp
     else:
         resp = jsonify(success= False)
-        resp.headers.add('Access-Control-Allow-Origin', '*')
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
         resp.status_code = 500
         return resp
 
@@ -221,13 +204,13 @@ def stopVideo():
     if ffmpegStop():
         resp = jsonify(success= True)
         resp.status_code = 200
-        resp.headers.add('Access-Control-Allow-Origin', '*')
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
 
         return resp
     else:
         resp = jsonify(success= False)
         resp.status_code = 500
-        resp.headers.add('Access-Control-Allow-Origin', '*')
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
 
         return resp
 
@@ -235,7 +218,7 @@ def stopVideo():
 
 @app.route("/observer/stop/")
 def stopObserver():
-    resp.headers.add('Access-Control-Allow-Origin', '*')
+    # resp.headers.add('Access-Control-Allow-Origin', '*')
     if observerStop():
         resp = jsonify(success= True)
         resp.status_code = 200
@@ -248,13 +231,14 @@ def stopObserver():
 
 @app.route("/aws/stop/")
 def stopBucket():
-    resp.headers.add('Access-Control-Allow-Origin', '*')
     if awsStop():
         resp = jsonify(success= True)
         resp.status_code = 200
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
         return resp
     else:
         resp = jsonify(success= False)
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
         resp.status_code = 500
         return resp
 

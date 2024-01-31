@@ -54,12 +54,14 @@ setInterval(() => {
 
 function tableInfo(){
 
+    counter = 0;
     inputsText = "";
     filterText = " -filter_complex '";
     outputsText = "";
 
     for (row = 0; row < dataTable.rows.length; row++){
         if(dataTable.rows[row].cells[0].children[0].checked== true){
+            counter ++;
             inputsText = inputsText.concat(
                 " -thread_queue_size 4096 -rtsp_transport tcp -i ",
                 dataTable.rows[row].cells[1].children[0].value 
@@ -75,6 +77,9 @@ function tableInfo(){
                 "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
             );
         }
+    }
+    if (counter == 1) {
+        return "ffmpeg ".concat(inputsText, outputsText.substr(11));
     }
     return "ffmpeg ".concat(inputsText, filterText, "' ", outputsText);
 }
