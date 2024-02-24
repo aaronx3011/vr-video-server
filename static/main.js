@@ -1,4 +1,22 @@
 const dataTable = document.getElementById("main-table");
+let i =0;
+
+function addData(chart/*, label*/, newData) {
+    //chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(newData);
+    });
+    chart.update();
+}
+
+function removeData(chart) {
+    //chart.data.labels.pop();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.shift();
+    });
+    chart.update();
+}
+
 
 setInterval(() => {
     fetch('http://localhost:5000/resources/')
@@ -18,6 +36,25 @@ setInterval(() => {
             document.getElementById("encoder").textContent=data["utilization.encoder [%]"];
             document.getElementById("decoder").textContent=data["utilization.decoder [%]"];
             document.getElementById("vram").textContent=data["utilization.memory [%]"];
+
+            if (i > 30){
+                removeData(chart);
+                i--;
+            }
+            // if (varGPU.length > 9){
+            //     varGPU.splice(-1);
+            // }
+            // if (varRAM.length > 9){
+            //     varRAM.splice(-1);
+            // }
+
+
+            i++;
+            addData(chart,Number(data["utilization.cpu [%]"]));
+            // varGPU.unshift(Number(data["utilization.gpu [%]"]));
+            // varRAM.unshift(Number(data["utilization.ram [%]"]));
+            //chart.update();
+
         })
         .catch(error => {
             // Handle any errors here

@@ -172,7 +172,6 @@ def startVideo():
     resp.status_code = 200
     data = request.get_json()
     if ffmpegStart(data["command"]):
-        print ("estamos aqui")
         resp = jsonify(success= True)
         # resp.headers.add('Access-Control-Allow-Origin', '*')
         resp.status_code = 200

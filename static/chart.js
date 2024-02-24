@@ -1,22 +1,55 @@
 
+let varCPU = [];
+let varGPU = [];
+let varRAM = [];
 const ctx = document.getElementById('myChart');
 
-new Chart(ctx, {
+const chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
+      labels: ['30s','','','','','','','','','','','','','','','15s','','','','','','','','','','','','','','','0s'],
+      datasets: [
+        {
+          label: 'GPU (%)',
+          data: varCPU,
+          borderWidth: 1,
+          lineTension: 0.5,
+          pointStyle: false,
+          borderColor: "#6c77a1",
+          fontColor: "FFFFFF"
+        }
+        // }, 
+        // {
+        //   label: 'GPU (%)',
+        //   data: varGPU,
+        //   borderWidth: 1
+        // },
+        // {
+        //   label: 'RAM (%)',
+        //   data: varRAM,
+        //   borderWidth: 1
+        // }
+      ]
     },
     options: {
       scales: {
-        y: {
-          beginAtZero: true
+        xAxes: [{
+          ticks: {
+            reverse: true
+          },
+          gridLines: {
+            zeroLineColor: '#ffcc33'
         }
+          }]
+        },
+        y: {
+            // ticks: {
+            //   fontColor: 'white',
+            // },
+            suggestedMin: 0,
+            suggestedMax: 100
+          }
+        
       }
     }
-}
-)
+);

@@ -53,9 +53,9 @@
     --main-border-color: #6c77a1;
     --secundary-border-color: #66bb93;
     --secundary-bg-color: #3d4463;
+    --secundary-bg-gradient-color: #1d253b;
     color: #FFF;
     font-family: sans-serif;
-
 }
 
 
@@ -64,24 +64,27 @@
 }
 
 .list-div {
-    background-color: var(--secundary-bg-color);
+    background: linear-gradient(75deg, var(--secundary-bg-color) 0%, var(--secundary-bg-gradient-color) 100%);
+    width: 62%;
 }
 
 .tittle-table th {
-    border-color: var(--main-bg-color);
+    /* border-color: var(--main-bg-color); */
     background: linear-gradient(75deg, var(--tittle-bg-color) 0%, var(--tittle-gradient-color) 100%);
     color: #ffffff;
     padding: .5rem;
+    height: 40px;
 }
 
 .tittle-table {
     border-spacing: .5rem;
+    padding: 20px 8px 0px 8px;
 }
 
 
 .main-table {
     margin: 1rem;
-    border: 1px solid var(--main-border-color);
+    border: 3px solid var(--main-border-color);
     background-color: initial;
     padding: .5rem;
     color: #ffffff;
@@ -89,25 +92,135 @@
 
 }
 
-/* .checkbox-round {
-    width: 1.3em;
-    height: 1.3em;
-    background-color: white;
-    border-radius: 50%;
-    vertical-align: middle;
-    border: 1px solid #ddd;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    cursor: pointer;
+.main-table td{
+
+    padding: 20px;
 }
 
-.checkbox-round:checked {
-    background-color: limegreen;
-} */
+
+
+.main-div {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px;
+    /* justify-content: space-around; */
+}
 
 
 
+.container-status {
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: right;
+    width: 34%;
+    background-image: linear-gradient(75deg, var(--secundary-bg-color) 0%, var(--secundary-bg-gradient-color) 100%);
+}
+
+.container-chart {
+    width: 60%;
+    background: transparent;
+}
+
+.container-resources {
+    padding-top: 20px;
+    background: transparent;
+    width: 30%;
+}
+
+.container-resources ul {
+    list-style-type: none;
+
+}
+
+.container-resources li {
+    margin-bottom: 15px;
+}
+.container-main-status {
+    display: flex;
+    border: 3px solid var(--main-border-color);
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.container-output {
+    width: 100%;
+    border: 3px solid var(--main-border-color);
+    text-align: right;
+}
+
+
+.main-button {
+  margin: 10px;
+  /* padding: 15px 30px; */
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.3s;
+  background-size: 200% auto;
+  color: white;
+  display: block;
+  border: 0px;
+  font-weight: 700;
+  box-shadow: 0px 0px 14px -7px #000000;
+  background-image: linear-gradient(75deg, var(--tittle-bg-color) 0%, var(--tittle-gradient-color) 100%);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 150px;
+  height: 40px;
+}
+
+.main-button:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.main-button:active {
+  transform: scale(0.95);
+}
+
+
+
+.secundary-button {
+    margin: 10px;
+    /* padding: 15px 30px; */
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.3s;
+    background-size: 200% auto;
+    color: white;
+    display: block;
+    border: 0px;
+    font-weight: 700;
+    box-shadow: 0px 0px 14px -7px #000000;
+    background-image: linear-gradient(75deg, var(--secundary-bg-color) 0%, var(--secundary-bg-gradient-color) 100%);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 150px;
+    height: 40px;
+  }
+  
+  .secundary-button:hover {
+    background-position: right center;
+    /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .secundary-button:active {
+    transform: scale(0.95);
+  }
+
+.container-action {
+    display: flex;
+    margin-left: 32%;
+}
 .checkbox-round {
     width: 28px;
     height: 28px;
@@ -199,29 +312,33 @@
 
  */
 
-
+/* 
 .main-table th {
     border: 1px solid var(--main-border-color);
 
-}
+} */
 
 .size-1 {
-    width: 5rem;
+    width: 5%;
 }
 
 .size-2 {
-    width: 10rem;
+    width: 10%;
+}
+
+.size-2 input {
+    width: 100%;
 }
 
 .size-5 {
-    width: 25rem;
+    width: 30%;
 }
 
 
-
+/* 
 * {
     box-sizing: border-box;
-}
+} */
 
 /* basic stylings ------------------------------------------ */
 
