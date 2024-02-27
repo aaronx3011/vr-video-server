@@ -58,7 +58,7 @@ def ffmpegStart(ffmpegCommand) -> bool:
 def observerStart() -> bool:
     if OBSERVER['active'] == False:
         try:
-            process = subprocess.Popen(['./observer.sh'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+            process = subprocess.Popen(['./videos/observer.sh'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
             OBSERVER["active"] = True
             for line in process.stdout:
                 OBSERVER["output"] = line[:-1]

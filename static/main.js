@@ -19,7 +19,7 @@ function removeData(chart) {
 
 
 setInterval(() => {
-    fetch('http://localhost:5000/resources/')
+    fetch('http://172.16.0.78:5000/resources/')
         .then(response => {
             if (response.ok) {
             return response.json(); // Parse the response data as JSON
@@ -50,7 +50,7 @@ setInterval(() => {
 
 
             i++;
-            addData(chart,Number(data["utilization.cpu [%]"]));
+            addData(chart,Number(data["utilization.gpu [%]"]));
             // varGPU.unshift(Number(data["utilization.gpu [%]"]));
             // varRAM.unshift(Number(data["utilization.ram [%]"]));
             //chart.update();
@@ -67,7 +67,7 @@ setInterval(() => {
 
 
 setInterval(() => {
-    fetch('http://localhost:5000/ffmpeg/status/')
+    fetch('http://172.16.0.78:5000/ffmpeg/status/')
         .then(response => {
             if (response.ok) {
             return response.json(); // Parse the response data as JSON
@@ -116,15 +116,15 @@ function tableInfo(){
         }
     }
     if (counter == 1) {
-        return "ffmpeg ".concat(inputsText, outputsText.substr(11));
+        return "ffmpeg -hwaccel cuda ".concat(inputsText, outputsText.substr(11));
     }
-    return "ffmpeg ".concat(inputsText, filterText, "' ", outputsText);
+    return "ffmpeg -hwaccel cuda ".concat(inputsText, filterText, "' ", outputsText);
 }
 
 
 async function ffmpegStart(){
 
-    fetch("http://localhost:5000/ffmpeg/start/", {
+    fetch("http://172.16.0.78:5000/ffmpeg/start/", {
         method: "POST",
         body: JSON.stringify({
             command: tableInfo()
@@ -140,12 +140,12 @@ async function ffmpegStart(){
 
 
 async function observerStart(){
-    fetch('http://localhost:5000/observer/start/');
+    fetch('http://172.16.0.78:5000/observer/start/');
     alert(';)')
 }
 
 function ffmpegStop(){
-    fetch('http://localhost:5000/ffmpeg/stop/');
+    fetch('http://172.16.0.78:5000/ffmpeg/stop/');
     alert('Y-Y')
 }
 

@@ -17,7 +17,7 @@ function execute() {
  
 inotifywait --recursive --monitor --format "%e %w%f" \
 --event modify,move,create,delete ./ \
---include '.*\.m3u8$' \
+--include '.*\.ts$' \
 | while read changed; do
     echo $changed
     execute "$@"
