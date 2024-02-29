@@ -6,6 +6,11 @@ import shlex
 # import nvsmi
 # import nvidia_smi
 
+
+
+
+####### python3 -m flask --app ffmpegValidations run --host=172.16.0.78 ########
+
 from flask_cors import CORS, cross_origin
 
 
@@ -58,7 +63,7 @@ def ffmpegStart(ffmpegCommand) -> bool:
 def observerStart() -> bool:
     if OBSERVER['active'] == False:
         try:
-            process = subprocess.Popen(['./videos/observer.sh'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+            process = subprocess.Popen(['./observer.sh'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
             OBSERVER["active"] = True
             for line in process.stdout:
                 OBSERVER["output"] = line[:-1]
@@ -68,6 +73,22 @@ def observerStart() -> bool:
             return False
     return True
 
+
+
+def clearS3() -> bool:
+    try:
+        process = subprocess.Popen(['aws', 's3', 'rm', 's3://vrinsitu-aaron-bucket/videos/', '--recursive'], stdout=subprocess.PIPE)
+    except subprocess.CalledProcessError as e:
+        return False
+    return True
+
+
+def clearLocal() -> bool:
+    try:
+        process = subprocess.call(['rm', '/home/vrinsitu/Documents/liveAPI/*.m3u8'])
+    except subprocess.CalledProcessError as e:
+        return False
+    return True
 
 
 def ffmpegStop() -> bool:
@@ -154,6 +175,21 @@ def installed():
 @app.route("/ffmpeg/version/")
 def version():
     return ffmpegVersion()
+
+
+@app.route("/bucket/clear/")
+def clear():
+    if clearS3() & clearLocal():
+        resp = jsonify(success= True)
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
+        resp.status_code = 200
+        return resp
+    else:
+        resp = jsonify(success= False)
+        resp.status_code = 500
+        # resp.headers.add('Access-Control-Allow-Origin', '*')
+        return resp
+
 
 
 @app.route("/ffmpeg/status/")

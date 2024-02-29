@@ -11,13 +11,13 @@ counter=0;
 function execute() {
     counter=$((counter+1))
     echo "Detected change n. $counter" |
-    aws s3 sync . s3://vrinsitu-aaron-bucket/
+    aws s3 sync . s3://vrinsitu-aaron-bucket/videos/
     eval "$@"
 }
  
 inotifywait --recursive --monitor --format "%e %w%f" \
---event modify,move,create,delete ./ \
---include '.*\.ts$' \
+--event move ./ \
+--include '.*\.m3u8$' \
 | while read changed; do
     echo $changed
     execute "$@"

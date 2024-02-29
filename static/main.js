@@ -111,7 +111,7 @@ function tableInfo(){
                 "-map '[v", row,"]' -c:v ",
                 dataTable.rows[row].cells[2].children[0].value, " ",
                 "-maxrate ", dataTable.rows[row].cells[3].children[0].value, "M ",
-                "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
+                dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
             );
         }
     }
@@ -124,6 +124,7 @@ function tableInfo(){
 
 async function ffmpegStart(){
 
+    clearBucketS3(); 
     fetch("http://172.16.0.78:5000/ffmpeg/start/", {
         method: "POST",
         body: JSON.stringify({
@@ -134,14 +135,17 @@ async function ffmpegStart(){
         }
         });
     observerStart();
-    alert(';)');    
+    alert(';) ;*');  
 }
 
+
+async function clearBucketS3(){
+    fetch('http://172.16.0.78:5000/bucket/clear/');
+}
 
 
 async function observerStart(){
     fetch('http://172.16.0.78:5000/observer/start/');
-    alert(';)')
 }
 
 function ffmpegStop(){
