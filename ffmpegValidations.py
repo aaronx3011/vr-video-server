@@ -85,7 +85,7 @@ def clearS3() -> bool:
 
 def clearLocal() -> bool:
     try:
-        process = subprocess.call(['rm', '/home/vrinsitu/Documents/liveAPI/*.m3u8'])
+        process = subprocess.call(['rm', '/home/vrinsitu/Documents/liveAPI/videos/*'])
     except subprocess.CalledProcessError as e:
         return False
     return True
