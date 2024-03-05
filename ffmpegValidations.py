@@ -1,7 +1,13 @@
+#!/usr/bin/python3
+import os
+
+aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
+aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
 import subprocess
 # import tempfile
-from flask import Flask, render_template, jsonify, request, url_for, redirect
 import psutil
+from flask import Flask, render_template, jsonify, request, url_for, redirect
+
 import shlex
 # import nvsmi
 # import nvidia_smi
@@ -85,7 +91,7 @@ def clearS3() -> bool:
 
 def clearLocal() -> bool:
     try:
-        process = subprocess.call(['rm', '/home/vrinsitu/Documents/liveAPI/videos/*'])
+        process = subprocess.check_call(['./clearFolder.sh'])
     except subprocess.CalledProcessError as e:
         return False
     return True
@@ -285,3 +291,5 @@ def resources():
 def chart():
     return render_template("chart.html")
 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')

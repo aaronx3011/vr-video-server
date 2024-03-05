@@ -1,1 +1,2 @@
-flask --app ffmpegValidations run
+#!/bin/bash
+python3 ffmpegValidations.py
