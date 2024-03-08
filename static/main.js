@@ -111,7 +111,7 @@ function tableInfo(){
                 "-map '[v", row,"]' -c:v ",
                 dataTable.rows[row].cells[2].children[0].value, " ",
                 "-maxrate ", dataTable.rows[row].cells[3].children[0].value, "M ",
-                dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
+                "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
             );
         }
     }

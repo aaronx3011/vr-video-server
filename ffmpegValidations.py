@@ -1,17 +1,15 @@
 #!/usr/bin/python3
-import os
 
-aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
-aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
 import subprocess
 # import tempfile
 import psutil
-from flask import Flask, render_template, jsonify, request, url_for, redirect
+from flask import Flask, render_template, jsonify, send_from_directory, request, url_for, redirect
 
 import shlex
 # import nvsmi
 # import nvidia_smi
 
+import os
 
 
 
@@ -290,6 +288,12 @@ def resources():
 @app.route("/chart/")
 def chart():
     return render_template("chart.html")
+
+
+@app.route("/file/<string:filename>")
+def get_image(filename):
+    return send_from_directory(os.getcwd() + "/", path=filename, as_attachment=False)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
