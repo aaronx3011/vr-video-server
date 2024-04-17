@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <title>Home</title>
+</head>
+<body class="VRINSITU">
+    <div id="main-div" class="main-div">
+        <div id="list-div" class="list-div">
+            <table class="tittle-table">
+                <tr>
+                    <th class="size-1">ACTIVE</th>
+                    <th class="size-5">CAMARA URL</th>
+                    <th class="size-2">CODEC</th>
+                    <th class="size-2">BIT RATE (Mb)</th>
+                    <th class="size-2">STREAM NAME</th>
+                </tr>
+            </table>
+            <table class="main-table" id="main-table">
+                    <tr>
+                        <td class="size-1">
+                            <input type="checkbox">
+                        </td>
+                        <td class="size-5">
+                            <input type="text">
+                        </td>
+                        <td class="size-2">
+                            <select name="codecs" id="codecs-select">
+                                <option value="hevc_nvenc">h265</option>
+                                <option value="libx264">h264</option>
+                            </select>
+                        </td>
+                        <td class="size-2">
+                            <input type="number" value="10">
+                            <span>Mb/s</span>
+                        </td>
+                        <td class="size-2">
+                            <select name="stream-name" class="test-select"></select>
+                            <span>.m3u8</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="size-1">
+                            <input type="checkbox">
+                        </td>
+                        <td class="size-5">
+                            <input type="text">
+                        </td>
+                        <td class="size-2">
+                            <select name="codecs" id="codecs-select">
+                                <option value="hevc_nvenc">h265</option>
+                                <option value="libx264">h264</option>
+                            </select>
+                        </td>
+                        <td class="size-2">
+                            <input type="number" value="10">
+                            <span>Mb/s</span>
+                        </td>
+                        <td class="size-2">
+                            <select name="stream-name" class="test-select"></select>
+                            <span>.m3u8</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="size-1">
+                            <input type="checkbox">
+                        </td>
+                        <td class="size-5">
+                            <input type="text">
+                        </td>
+                        <td class="size-2">
+                            <select name="codecs" id="codecs-select">
+                                <option value="hevc_nvenc">h265</option>
+                                <option value="libx264">h264</option>
+                            </select>
+                        </td>
+                        <td class="size-2">
+                            <input type="number" value="10">
+                            <span>Mb/s</span>
+                        </td>
+                        <td class="size-2">
+                            <select name="stream-name" class="test-select"></select>
+                            <span>.m3u8</span>
+                        </td>
+                    </tr>
+                    <tr class="active-row">
+                        <td class="size-1">
+                            <input type="checkbox">
+                        </td>
+                        <td class="size-5">
+                            <input type="text"></td>
+                        <td class="size-2">
+                            <select name="codecs" id="codecs-select">
+                                <option value="hevc_nvenc">h265</option>
+                                <option value="libx264">h264</option>
+                            </select>
+                        </td>
+                        <td class="size-2">
+                            <input type="number" value="10">
+                            <span>Mb/s</span>
+                        </td>
+                        <td class="size-2">
+                            <select name="stream-name" class="test-select"></select>
+                            <span>.m3u8</span>
+                        </td>
+                    </tr>
+            </table>
+            <div id="action-div" class="container-action">
+                <button onclick="ffmpegStart()" class="main-button"> <span>start</span> </button>
+                <button onclick="ffmpegStop()" class="secundary-button"> <span>stop</span> </button>
+        
+            </div>
+        </div>
+        <div id="status-div" class="container-status">
+            <div style="height: 275px;">
+
+            </div>
+            <div id="main-status-div" class="container-main-status">
+                <div id="resources-div" class="container-resources">
+                    <ul id="resources">
+                        <li>
+                            <label for="cpu"> CPU [%]: </label>
+                            <span id="cpu"> 0% </span>
+                        </li>
+                        <li>
+                            <label for="ram"> RAM [%]: </label>
+                            <span id="ram"> 0% </span>
+                        </li>
+                        <li>
+                            <label for="gpu"> GPU [%]: </label>
+                            <span id="gpu"> 0% </span>
+                        </li>
+                        <li>
+                            <label for="vram"> VRAM [%]: </label>
+                            <spana id="vram"> 0% </span>
+                        </li>
+                        <li>
+                            <label for="decoder"> DECODER [%]: </label>
+                            <span id="decoder"> 0% </span>
+                        </li>
+                        <li>
+                            <label for="encoder"> ENCODER [%]: </label>
+                            <span id="encoder"> 0% </span>
+                        </li>
+                    </ul>
+                </div>
+                <div id="chart-container" class="container-chart">
+                    <canvas id="myChart" width="200" height="150"></canvas>
+                </div>
+            </div>
+            <div id="ffmpeg-output" class="container-output">
+                <span id="ffmpeg-text"></span>
+                <br>
+                <span id="observer-text"></span>
+            </div>
+        </div>
+    </div>
+    <input type="text" id="width" value="8160">
+    <span>:</span>
+    <input type="text" id="height" value="3616">
+
+    <script src="{{url_for('static', filename='chart.js')}}"></script>
+    <script src="{{url_for('static', filename='main.js')}}"></script>
+</body>
+</html>
