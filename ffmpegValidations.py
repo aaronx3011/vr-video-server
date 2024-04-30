@@ -84,7 +84,7 @@ def observerStart() -> bool:
 
 def clearS3() -> bool:
     try:
-        process = subprocess.Popen(['aws', 's3', 'rm', 's3://vrinsitu-aaron-bucket/videos/', '--recursive'], stdout=subprocess.PIPE)
+        process = subprocess.Popen(['aws', 's3', 'rm', 's3://vrinsitu-aaron-bucket/transmision/', '--recursive'], stdout=subprocess.PIPE)
     except subprocess.CalledProcessError as e:
         return False
     return True
@@ -167,7 +167,6 @@ def home():
 
 @app.route("/ffmpeg/installed/")
 def installed():
-
     if ffmpegInstalled():
         resp = jsonify(success= True)
         resp.status_code = 200
@@ -280,9 +279,44 @@ def get_image(filename):
     return send_from_directory(os.getcwd() + "/", path=filename, as_attachment=False)
 
 
-@app.route("/playfab/getstreamnames/")
+@app.route("/playfab/stream/get/names")
 def get_names():
-    return jsonify(playfabtest.GetItems())
+    return playfabtest.GetItems()
+
+
+@app.route("/playfab/stream/<string:tag>/on/")
+def turnOnStreams(tag):
+    try:
+        playfabtest.turnOnItems(tag)
+        resp = jsonify(success= True)
+        resp.status_code = 200
+        return resp
+    except:
+        resp = jsonify(success= False)
+        resp.status_code = 500
+        return resp
+    
+
+@app.route("/file/preview/<string:filename>")
+def get_preview(filename):
+    return send_from_directory(os.getcwd() + "/videos/", path=filename, as_attachment=False)
+
+
+@app.route("/preview/")
+def preview():
+    return render_template("preview.html")
+
+@app.route("/playfab/stream/<string:tag>/off/")
+def turnOffStreams(tag):
+    try:
+        playfabtest.turnOffItems(tag)
+        resp = jsonify(success= True)
+        resp.status_code = 200
+        return resp
+    except:
+        resp = jsonify(success= False)
+        resp.status_code = 500
+        return resp
     
 
 if __name__ == '__main__':

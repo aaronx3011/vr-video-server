@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
+    <link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet"/>
     <title>Home</title>
 </head>
 <body class="VRINSITU">
@@ -24,10 +23,10 @@
             <table class="main-table" id="main-table">
                     <tr>
                         <td class="size-1">
-                            <input type="checkbox">
+                            <input onchange="updateCommand()" type="checkbox">
                         </td>
                         <td class="size-5">
-                            <input type="text">
+                            <input onchange="updateCommand()" type="text">
                         </td>
                         <td class="size-2">
                             <select name="codecs" id="codecs-select">
@@ -36,7 +35,7 @@
                             </select>
                         </td>
                         <td class="size-2">
-                            <input type="number" value="10">
+                            <input onchange="updateCommand()" type="number" value="10">
                             <span>Mb/s</span>
                         </td>
                         <td class="size-2">
@@ -46,10 +45,10 @@
                     </tr>
                     <tr>
                         <td class="size-1">
-                            <input type="checkbox">
+                            <input onchange="updateCommand()" type="checkbox">
                         </td>
                         <td class="size-5">
-                            <input type="text">
+                            <input onchange="updateCommand()" type="text">
                         </td>
                         <td class="size-2">
                             <select name="codecs" id="codecs-select">
@@ -58,7 +57,7 @@
                             </select>
                         </td>
                         <td class="size-2">
-                            <input type="number" value="10">
+                            <input onchange="updateCommand()" type="number" value="10">
                             <span>Mb/s</span>
                         </td>
                         <td class="size-2">
@@ -68,10 +67,10 @@
                     </tr>
                     <tr>
                         <td class="size-1">
-                            <input type="checkbox">
+                            <input onchange="updateCommand()" type="checkbox">
                         </td>
                         <td class="size-5">
-                            <input type="text">
+                            <input onchange="updateCommand()" type="text">
                         </td>
                         <td class="size-2">
                             <select name="codecs" id="codecs-select">
@@ -80,7 +79,7 @@
                             </select>
                         </td>
                         <td class="size-2">
-                            <input type="number" value="10">
+                            <input onchange="updateCommand()" type="number" value="10">
                             <span>Mb/s</span>
                         </td>
                         <td class="size-2">
@@ -90,10 +89,10 @@
                     </tr>
                     <tr class="active-row">
                         <td class="size-1">
-                            <input type="checkbox">
+                            <input onchange="updateCommand()" type="checkbox">
                         </td>
                         <td class="size-5">
-                            <input type="text"></td>
+                            <input onchange="updateCommand()" type="text"></td>
                         <td class="size-2">
                             <select name="codecs" id="codecs-select">
                                 <option value="hevc_nvenc">h265</option>
@@ -101,7 +100,7 @@
                             </select>
                         </td>
                         <td class="size-2">
-                            <input type="number" value="10">
+                            <input onchange="updateCommand()" type="number" value="10">
                             <span>Mb/s</span>
                         </td>
                         <td class="size-2">
@@ -117,9 +116,6 @@
             </div>
         </div>
         <div id="status-div" class="container-status">
-            <div style="height: 275px;">
-
-            </div>
             <div id="main-status-div" class="container-main-status">
                 <div id="resources-div" class="container-resources">
                     <ul id="resources">
@@ -153,6 +149,26 @@
                     <canvas id="myChart" width="200" height="150"></canvas>
                 </div>
             </div>
+            <div class="container-command">
+                <!-- <span id="command-span"></span> -->
+               
+                    <div class="container-video">
+                        <video
+                            id="my-video"
+                            class="video-js vjs-big-play-centered vjs-theme-sea"
+                            controls
+                            loop
+                            autoplay
+                            preload="auto"
+                            fluid="true"
+                            poster=""
+                            data-setup='{}'
+                            >
+                            <source id="video-source"  src="http://172.16.0.78:5000/file/preview/previewRealMadridVsManCity.m3u8" type="application/x-mpegURL">
+                        </video>
+                    </div> 
+
+            </div>
             <div id="ffmpeg-output" class="container-output">
                 <span id="ffmpeg-text"></span>
                 <br>
@@ -160,11 +176,17 @@
             </div>
         </div>
     </div>
-    <input type="text" id="width" value="8160">
+    <input onchange="updateCommand()" type="text" id="width" value="8160">
     <span>:</span>
-    <input type="text" id="height" value="3616">
+    <input onchange="updateCommand()" type="text" id="height" value="3616">
 
     <script src="{{url_for('static', filename='chart.js')}}"></script>
     <script src="{{url_for('static', filename='main.js')}}"></script>
+    <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+    <script src="https://unpkg.com/videojs-contribhls/dist/videojs-contrib-hls.js"></script>
+    <script>
+        var player = videojs('my-video');
+    </script>
+    
 </body>
 </html>

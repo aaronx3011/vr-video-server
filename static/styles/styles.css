@@ -106,7 +106,14 @@
     /* justify-content: space-around; */
 }
 
+.container-command {
+    padding: 20px;
+    border: 3px solid var(--main-border-color);
+    background: transparent;
+    width: 100% -40px;
+    height: 275px;
 
+}
 
 .container-status {
     display: flex;
