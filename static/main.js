@@ -1,17 +1,35 @@
 const dataTable = document.getElementById("main-table");
+const command = document.getElementById("command-span");
+const videoSource = document.getElementById("video-source");
 let i =0;
 let streamsNames = []
 
 
 
 
-function addOption(text){
+function clearOption(){
+    console.log("clear")
+    let selects = document.getElementsByClassName("test-select");
+    console.log(selects);
+    for (let i = 0; i < selects.length; i++){
+        console.log(selects[i].childElementCount);
+    }
+
+    // let optionsToDelete = document.getElementsByTagName('option')
+
+    // for (let i = 0; i < optionsToDelete.length; i++){
+    //     optionsToDelete[i].remove()
+    // }
+
+}
+
+
+function addOption(text,value){
     let selects = document.getElementsByClassName("test-select");
     for (let i = 0; i < selects.length; i++){
-        console.log(selects[i])
-        let option = document.createElement("option");
-        option.text = text;
-        selects[i].add(option)
+        // console.log(selects[i])
+        let newOption = new Option(text, value); // Create a new Option object
+        selects[i].appendChild(newOption);
     }
 }
 
@@ -42,14 +60,14 @@ function getStreamNames(){
         }
     })
     .then(data => {
-        console.log(data);
+        clearOption();
             for (i in data){
                 for (tag in data[i].Tags){
-                    console.log(data[i].Tags[tag]);
-                    addOption(data[i]['Tags'][tag]);
+                    // console.log(data[i].Tags[tag]);
+
+                    addOption(data[i]['Tags'][tag],data[i]["ItemId"]);
                 }
             };
-        console.log(streamsNames);
     })
 }
 
@@ -143,23 +161,32 @@ function tableInfo(){
             );
             if(row != 0) {filterText = filterText.concat(";");}
             filterText = filterText.concat(
-                "[", row, ":v]copy[v",row,"]"
+                "[", row, ":v]split=2[v",row,"][preview", row, "];[preview", row, "]scale=w=1280:h=720[scale", row, "]"
             );
             outputsText = outputsText.concat(
                 "-map '[v", row,"]' -c:v ",
                 dataTable.rows[row].cells[2].children[0].value, " ",
                 "-maxrate ", dataTable.rows[row].cells[3].children[0].value, "M ",
-                "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
+                "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 ",
+                // Preview
+                "-map '[scale", row,"]' -c:v ",
+                "libx264", " ",
+                "-maxrate ", "1M ",
+                "videos/preview", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
             );
             streamsToActivate.push(dataTable.rows[row].cells[4].children[0].value)
         }
     }
-    if (counter == 1) {
-        return ["ffmpeg -hwaccel cuda ".concat(inputsText, " -vf 'scale=",videoWidth,":",videoHeight,"'", outputsText.substr(11)), streamsToActivate];
-    }
+    // if (counter == 1) {
+    //     return ["ffmpeg -hwaccel cuda ".concat(inputsText, " -vf 'scale=",videoWidth,":",videoHeight,"'", outputsText.substr(11)), streamsToActivate];
+    // }
     return ["ffmpeg -hwaccel cuda ".concat(inputsText, filterText, "' ", outputsText), streamsToActivate];
 }
 
+
+function updateCommand(){
+    command.textContent=tableInfo()[0];
+}
 
 async function ffmpegStart(){
 
@@ -194,7 +221,11 @@ async function ffmpegStart(){
             console.error(error); // Example: Logging the error to the console
         });
     }
-    alert(';) ;*');  
+    
+    videoSource.setAttribute('src','http://172.16.0.78:5000/file/preview/preview'.concat(tableStreams[1], '.m3u8'))
+
+    // alert('http://172.16.0.78:5000/file/preview/preview'.concat(tableStreams[1], '.m3u8'));
+
 }
 
 

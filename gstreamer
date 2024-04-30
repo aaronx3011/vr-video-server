@@ -1,0 +1,54 @@
+rtmp://172.16.0.69:1950/live/origin1
+
+
+gst-launch-1.0 -e \
+rtmpsrc location=rtmp://172.16.0.69:1950/live/origin4 ! flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\),format=NV12,width=3840,height=2160 ! mix. \
+rtmpsrc location=rtmp://172.16.0.69:1950/live/origin3 ! flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\),format=NV12,width=3840,height=2160 ! mix. \
+rtmpsrc location=rtmp://172.16.0.69:1950/live/origin2 ! flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\),format=NV12,width=3840,height=2160 ! mix. \
+rtmpsrc location=rtmp://172.16.0.69:1950/live/origin1 ! flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\),format=NV12,width=3840,height=2160 ! mix. \
+glvideomixer name=mix sink_0::alpha=0.5 \
+sink_1::xpos=400 sink_1::alpha=0.5 \
+sink_2::ypos=3000 sink_2::alpha=0.5 sink_3::xpos=400 sink_3::ypos=3000 sink_3::alpha=0.5 ! \
+video/x-raw\(memory:GLMemory\),format=NV12,width=4096,height=4096 ! \
+nvh265enc ! h265parse ! qtmux ! filesink location=out.mp4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+gst-launch-1.0 rtmpsrc location=rtmp://172.16.0.77:1950/live/origin4 ! flvdemux \
+! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160,memory=CUDAMemory ! mix. rtmpsrc location=rtmp://172.16.0.77:1950/live/origin3 ! flvdemux \
+! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160,memory=CUDAMemory ! mix. rtmpsrc location=rtmp://172.16.0.77:1950/live/origin2 ! flvdemux \
+! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160,memory=CUDAMemory ! mix. rtmpsrc location=rtmp://172.16.0.77:1950/live/origin1 ! flvdemux \
+! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160,memory=CUDAMemory ! mix. dmdstitcher2 name=mix \
+! videoconvert ! video/x-raw,format=NV12,width=8192,height=4096 ! nvh265enc ! h265parse ! hlssink2 target-duration=10 location=%05d.ts
+
+
+
+
+
+
+
+
+gst-launch-1.0 rtmpsrc location=rtmp://172.16.0.77:1950/live/origin4 ! flvdemux \
+! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160,memory=CUDAMemory ! mix. rtmpsrc location=rtmp://172.16.0.77:1950/live/origin3 ! flvdemux \
+! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160,memory=CUDAMemory ! mix. rtmpsrc location=rtmp://172.16.0.77:1950/live/origin2 ! flvdemux \
+! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160,memory=CUDAMemory ! mix. rtmpsrc location=rtmp://172.16.0.77:1950/live/origin1 ! flvdemux \
+! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160,memory=CUDAMemory ! mix. dmdstitcher2 name=mix  \
+! videoconvert ! video/x-raw,format=NV12,width=8192,height=4096 ! nvh265enc ! h265parse ! hlssink2 target-duration=10 location=%05d.ts
+
+
+
+
+
+gst-launch-1.0 -e rtmpsrc location=rtmp://172.16.0.68:1950/live/origin5 ! flvdemux ! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160 ! mix. rtmpsrc location=rtmp://172.16.0.68:1950/live/origin6 ! flvdemux ! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160 ! mix. rtmpsrc location=rtmp://172.16.0.68:1950/live/origin1 ! flvdemux ! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160 ! mix. rtmpsrc location=rtmp://172.16.0.68:1950/live/origin2 ! flvdemux ! h264parse ! nvh264dec ! video/x-raw,format=NV12,width=3840,height=2160 ! mix.  dmdstitcher2 name=mix ! video/x-raw,format=NV12,width=7680,height=3840 ! nvh265enc preset=1 ! h265parse ! hlssink2 target-duration=2 location=%05d.ts

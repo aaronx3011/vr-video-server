@@ -167,7 +167,6 @@ def home():
 
 @app.route("/ffmpeg/installed/")
 def installed():
-
     if ffmpegInstalled():
         resp = jsonify(success= True)
         resp.status_code = 200
@@ -297,6 +296,15 @@ def turnOnStreams(tag):
         resp.status_code = 500
         return resp
     
+
+@app.route("/file/preview/<string:filename>")
+def get_preview(filename):
+    return send_from_directory(os.getcwd() + "/videos/", path=filename, as_attachment=False)
+
+
+@app.route("/preview/")
+def preview():
+    return render_template("preview.html")
 
 @app.route("/playfab/stream/<string:tag>/off/")
 def turnOffStreams(tag):

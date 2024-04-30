@@ -10,16 +10,24 @@ playfab.PlayFabSettings.DeveloperSecretKey = "O3GO7SA6S63CI3D9KOIN7KI7SCUM6TJBCM
 #     'CatalgoVersion': 'HLS1'
 # }
 
+
+# MASTER_PLAYER_ACCOUNT_ID = "816012A0B4C56D6A"
+# TITLE_PLAYER_ACCOUNT_ID = "6C4E9770B924125C"
+ACCOUNT_LINK_ID = "A9F5ED83759CB63"
+
+
 StreamsDispnibles = {
-        "Catalog": []
+        "Catalog": [],
+        "Inventory": []
     }
+
 
 def callback(success, failure):
     if success:
         pass
-        print(success)
+        # print(success)
     else:
-        pass
+        # pass
         print(failure)
  
 # # Llama a la API para obtener el inventario global
@@ -38,26 +46,63 @@ def callback2(success, failure):
         #     if (item["Tags"] != any):
         #         for i in item["Tags"]:
         #             StreamsDispnibles.append(i)
+        # print("-------------------------------------------- visibleItems --------------------------------------------")
+        visibleItems = [ItemId["ItemId"] for ItemId in StreamsDispnibles["Inventory"]]
+        # print(visibleItems)
+        # print("-------------------------------------------- success --------------------------------------------")
         # print(success)
-        StreamsDispnibles["Catalog"] = success["Catalog"]
+        # print("-------------------------------------------- success --------------------------------------------")
+        # print(success["Catalog"][0]["ItemId"])
+        # StreamsDispnibles["Catalog"] = lambda items=visibleItems: success["Catalog"]["ItemId"] in items
+        for item in success["Catalog"]:
+            if item["ItemId"] in visibleItems:
+                StreamsDispnibles["Catalog"].append(item)
     else:
         print(failure)
 
 
+def inventoryCallback(success, failure):
+    
+    if success:
+        # for item in success["Catalog"]:
+        #     if (item["Tags"] != any):
+        #         for i in item["Tags"]:
+        #             StreamsDispnibles.append(i)
+        # print(success)
+        StreamsDispnibles["Inventory"] = success["Inventory"]
+    else:
+        print(failure)
+
 # Crea una solicitud de inicio de sesión
-request = {
-    "Username": "alexander.tabata@vrinsitu.com",
-    "Password": "Eroenckelman11.",
-    "CustomId": "AF482D110F586149"
-    }
+# request = {
+#     "Username": "alexander.tabata@vrinsitu.com",
+#     "Password": "Eroenckelman11.",
+#     "CustomId": "AF482D110F586149"
+#     }
 
 # Llama a la API para iniciar sesión
 
 
+loginRequest = {
+    "CustomId": ACCOUNT_LINK_ID
+}
+
+
+def getInventory():
+    login = playfab.PlayFabClientAPI.LoginWithCustomID(loginRequest, callback)
+    result = playfab.PlayFabClientAPI.GetUserInventory(loginRequest, inventoryCallback)
+    return json.dumps(StreamsDispnibles["Inventory"])
+
+
+
+
+
 def GetItems():
-    login_result = playfab.PlayFabClientAPI.LoginWithCustomID(request,callback)
-    result = playfab.PlayFabClientAPI.GetCatalogItems(request,callback2)
+    getInventory()
+    result = playfab.PlayFabClientAPI.GetCatalogItems({},callback2)
     return json.dumps(StreamsDispnibles["Catalog"])
+    # return StreamsDispnibles
+
 
 
 
@@ -72,7 +117,7 @@ def UpdateItem(item, status, SearchedTag):
                     "ItemId": item.get("ItemId", None),
                     "CatalogVersion": item.get("CatalogVersion", None),
                     "DisplayName": status,
-                    "ItemClass" : item.get("ItemId", None),
+                    "ItemClass" : item.get("ItemClass", None),
                     "Description": item.get("Description", None),
                     "VirtualCurrencyPrices": item.get("VirtualCurrencyPrices", None),
                     "RealCurrencyPrices": item.get("RealCurrencyPrices", None),
@@ -93,11 +138,8 @@ def UpdateItem(item, status, SearchedTag):
 
 
         playfab.PlayFabAdminAPI.UpdateCatalogItems(request2, callback)
-        
-
     
     return
-
 
 
 # def callbackOn(success=any, failure=any, tag=''):
@@ -116,20 +158,20 @@ def UpdateItem(item, status, SearchedTag):
 #         print(failure)
 
 def turnOnItems(SearchedTag):
-    login_result = playfab.PlayFabClientAPI.LoginWithCustomID(request,callback)
-    result = playfab.PlayFabClientAPI.GetCatalogItems(
-        request,
-        lambda success,failure, tag=SearchedTag : [UpdateItem(i, "on", tag) for i in success["Catalog"]]
+    login = playfab.PlayFabClientAPI.LoginWithCustomID(loginRequest, callback)
+    result = playfab.PlayFabClientAPI.GetUserInventory(
+        loginRequest,
+        lambda success,failure, tag=SearchedTag : [UpdateItem(i, "on", tag) for i in success["Inventory"]]
     )
     return
 
 
 
 def turnOffItems(SearchedTag):
-    login_result = playfab.PlayFabClientAPI.LoginWithCustomID(request,callback)
-    result = playfab.PlayFabClientAPI.GetCatalogItems(
-        request,
-        lambda success,failure, tag=SearchedTag : [UpdateItem(i, "off", tag) for i in success["Catalog"]]
+    login = playfab.PlayFabClientAPI.LoginWithCustomID(loginRequest,callback)
+    result = playfab.PlayFabClientAPI.GetUserInventory(
+        loginRequest,
+        lambda success,failure, tag=SearchedTag : [UpdateItem(i, "off", tag) for i in success["Inventory"]]
     )
     return
 
@@ -139,8 +181,9 @@ def turnOffItems(SearchedTag):
 #     result = playfab.PlayFabClientAPI.GetCatalogItems({"Filter": "Tags == madrid"},callback2)
 #     return json.dumps(StreamsDispnibles["Catalog"])
 
+# GetInventory()
 
-
+# print(GetItems())
 
 # Ejemplo de uso
 
