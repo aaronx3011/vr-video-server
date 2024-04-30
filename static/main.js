@@ -146,41 +146,65 @@ function tableInfo(){
 
     counter = 0;
     inputsText = "";
-    filterText = " -filter_complex '";
+    filterText = " glvideomixer2 name=mix ! video/x-raw\(memory:GLMemory\),format=RGBA,width=7680,height=4320 ! nvh265enc preset=1 ! h265parse ! hlssink2 target-duration=2 location=videos/%05d.ts playlist-location=videos/playlist.m3u8";
     outputsText = "";
     let videoWidth = document.getElementById("width").value;
     let videoHeight = document.getElementById("height").value;
     let streamsToActivate=[];
 
     for (row = 0; row < dataTable.rows.length; row++){
-        if(dataTable.rows[row].cells[0].children[0].checked== true){
-            counter ++;
-            inputsText = inputsText.concat(
-                " -thread_queue_size 4096 -rtsp_transport tcp -i ",
-                dataTable.rows[row].cells[1].children[0].value 
-            );
-            if(row != 0) {filterText = filterText.concat(";");}
-            filterText = filterText.concat(
-                "[", row, ":v]split=2[v",row,"][preview", row, "];[preview", row, "]scale=w=1280:h=720[scale", row, "]"
-            );
-            outputsText = outputsText.concat(
-                "-map '[v", row,"]' -c:v ",
-                dataTable.rows[row].cells[2].children[0].value, " ",
-                "-maxrate ", dataTable.rows[row].cells[3].children[0].value, "M ",
-                "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 ",
-                // Preview
-                "-map '[scale", row,"]' -c:v ",
-                "libx264", " ",
-                "-maxrate ", "1M ",
-                "videos/preview", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
-            );
-            streamsToActivate.push(dataTable.rows[row].cells[4].children[0].value)
+        // if(dataTable.rows[row].cells[0].children[0].checked== true){
+        //     counter ++;
+        //     inputsText = inputsText.concat(
+        //         " -thread_queue_size 4096 -rtsp_transport tcp -i ",
+        //         dataTable.rows[row].cells[1].children[0].value 
+        //     );
+        //     if(row != 0) {filterText = filterText.concat(";");}
+        //     filterText = filterText.concat(
+        //         "[", row, ":v]split=2[v",row,"][preview", row, "];[preview", row, "]scale=w=1280:h=720[scale", row, "]"
+        //     );
+        //     outputsText = outputsText.concat(
+        //         "-map '[v", row,"]' -c:v ",
+        //         dataTable.rows[row].cells[2].children[0].value, " ",
+        //         "-maxrate ", dataTable.rows[row].cells[3].children[0].value, "M ",
+        //         "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 ",
+        //         // Preview
+        //         "-map '[scale", row,"]' -c:v ",
+        //         "libx264", " ",
+        //         "-maxrate ", "1M ",
+        //         "videos/preview", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
+        //     );
+        //     streamsToActivate.push(dataTable.rows[row].cells[4].children[0].value)
+        // }
+
+        for (row = 0; row < dataTable.rows.length; row++){
+            if(dataTable.rows[row].cells[0].children[0].checked== true){
+                counter ++;
+                inputsText = inputsText.concat(
+                    "rtmpsrc location=",
+                    dataTable.rows[row].cells[1].children[0].value,
+                    " ! flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\),format=NV12,width=3840,height=2160 ! glcolorconvert ! video/x-raw\(memory:GLMemory\),format=RGBA,width=3840,height=2160 ! mix. "
+                );
+                // if(row != 0) {filterText = filterText.concat(";");}
+                // filterText = filterText.concat(
+                //     "[", row, ":v]copy[v",row,"]"
+                // );
+                // outputsText = outputsText.concat(
+                //     "-map '[v", row,"]' -c:v ",
+                //     dataTable.rows[row].cells[2].children[0].value, " ",
+                //     "-maxrate ", dataTable.rows[row].cells[3].children[0].value, "M ",
+                //     "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
+                // );
+            }
         }
+
+
+
     }
     // if (counter == 1) {
     //     return ["ffmpeg -hwaccel cuda ".concat(inputsText, " -vf 'scale=",videoWidth,":",videoHeight,"'", outputsText.substr(11)), streamsToActivate];
     // }
-    return ["ffmpeg -hwaccel cuda ".concat(inputsText, filterText, "' ", outputsText), streamsToActivate];
+    return ["gst-launch-1.0 -e ".concat(inputsText, filterText), streamsToActivate];
 }
 
 

@@ -100,7 +100,7 @@ def clearLocal() -> bool:
 
 def ffmpegStop() -> bool:
     try:
-        subprocess.check_call(['pkill', 'ffmpeg'], stdout= subprocess.PIPE)
+        subprocess.check_call(['pkill', 'gst-launch-1.0'], stdout= subprocess.PIPE)
         VIDEO['active'] = False
         VIDEO['output'] = ''
         return True
