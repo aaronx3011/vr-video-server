@@ -4,9 +4,6 @@ const videoSource = document.getElementById("video-source");
 let i =0;
 let streamsNames = []
 
-
-
-
 function clearOption(){
     console.log("clear")
     let selects = document.getElementsByClassName("test-select");
@@ -14,27 +11,18 @@ function clearOption(){
     for (let i = 0; i < selects.length; i++){
         console.log(selects[i].childElementCount);
     }
-
-    // let optionsToDelete = document.getElementsByTagName('option')
-
-    // for (let i = 0; i < optionsToDelete.length; i++){
-    //     optionsToDelete[i].remove()
-    // }
-
 }
 
 
 function addOption(text,value){
     let selects = document.getElementsByClassName("test-select");
     for (let i = 0; i < selects.length; i++){
-        // console.log(selects[i])
-        let newOption = new Option(text, value); // Create a new Option object
+        let newOption = new Option(text, value);
         selects[i].appendChild(newOption);
     }
 }
 
-function addData(chart/*, label*/, newData) {
-    //chart.data.labels.push(label);
+function addData(chart, newData) {
     chart.data.datasets.forEach((dataset) => {
         dataset.data.push(newData);
     });
@@ -42,7 +30,6 @@ function addData(chart/*, label*/, newData) {
 }
 
 function removeData(chart) {
-    //chart.data.labels.pop();
     chart.data.datasets.forEach((dataset) => {
         dataset.data.shift();
     });
@@ -63,8 +50,6 @@ function getStreamNames(){
         clearOption();
             for (i in data){
                 for (tag in data[i].Tags){
-                    // console.log(data[i].Tags[tag]);
-
                     addOption(data[i]['Tags'][tag],data[i]["ItemId"]);
                 }
             };
@@ -75,43 +60,27 @@ setInterval(() => {
     fetch('http://172.16.0.78:5000/resources/')
         .then(response => {
             if (response.ok) {
-            return response.json(); // Parse the response data as JSON
+            return response.json();
             } else {
             throw new Error('API request failed');
             }
         })
         .then(data => {
-            // Process the response data here
-            // Example: Logging the data to the console
             document.getElementById("cpu").textContent=data["utilization.cpu [%]"];
             document.getElementById("ram").textContent=data["utilization.ram [%]"];
             document.getElementById("gpu").textContent=data["utilization.gpu [%]"];
             document.getElementById("encoder").textContent=data["utilization.encoder [%]"];
             document.getElementById("decoder").textContent=data["utilization.decoder [%]"];
             document.getElementById("vram").textContent=data["utilization.memory [%]"];
-
             if (i > 30){
                 removeData(chart);
                 i--;
             }
-            // if (varGPU.length > 9){
-            //     varGPU.splice(-1);
-            // }
-            // if (varRAM.length > 9){
-            //     varRAM.splice(-1);
-            // }
-
-
             i++;
             addData(chart,Number(data["utilization.gpu [%]"]));
-            // varGPU.unshift(Number(data["utilization.gpu [%]"]));
-            // varRAM.unshift(Number(data["utilization.ram [%]"]));
-            //chart.update();
-
         })
         .catch(error => {
-            // Handle any errors here
-            console.error(error); // Example: Logging the error to the console
+            console.error(error);
         });
 
 }, 500);
@@ -123,60 +92,31 @@ setInterval(() => {
     fetch('http://172.16.0.78:5000/ffmpeg/status/')
         .then(response => {
             if (response.ok) {
-            return response.json(); // Parse the response data as JSON
+            return response.json();
             } else {
             throw new Error('API request failed');
             }
         })
         .then(data => {
-            // Process the response data here
-            // Example: Logging the data to the console
             document.getElementById("ffmpeg-text").textContent=data["text"];
             document.getElementById("observer-text").textContent=data["observerText"];
         })
         .catch(error => {
-            // Handle any errors here
-            console.error(error); // Example: Logging the error to the console
+            console.error(error);
         });
 
 }, 50);
 
 
 function tableInfo(){
-
+    let streamName= document.getElementById("stream-name")
     counter = 0;
     inputsText = "";
-    filterText = " glvideomixer2 name=mix ! video/x-raw\(memory:GLMemory\),format=RGBA,width=7680,height=4320 ! nvh265enc preset=1 ! h265parse ! hlssink2 target-duration=2 location=videos/%05d.ts playlist-location=videos/playlist.m3u8";
+    filterText = " glvideomixer2 name=mix ! video/x-raw\(memory:GLMemory\),format=RGBA,width=7680,height=4320 ! nvh265enc preset=1 ! h265parse ! hlssink2 target-duration=2 location=videos/%05d.ts playlist-location=videos/".concat(streamName.options[streamName.selectedIndex].text, ".m3u8");
     outputsText = "";
-    let videoWidth = document.getElementById("width").value;
-    let videoHeight = document.getElementById("height").value;
-    let streamsToActivate=[];
+    let streamsToActivate=[streamName.value];
 
     for (row = 0; row < dataTable.rows.length; row++){
-        // if(dataTable.rows[row].cells[0].children[0].checked== true){
-        //     counter ++;
-        //     inputsText = inputsText.concat(
-        //         " -thread_queue_size 4096 -rtsp_transport tcp -i ",
-        //         dataTable.rows[row].cells[1].children[0].value 
-        //     );
-        //     if(row != 0) {filterText = filterText.concat(";");}
-        //     filterText = filterText.concat(
-        //         "[", row, ":v]split=2[v",row,"][preview", row, "];[preview", row, "]scale=w=1280:h=720[scale", row, "]"
-        //     );
-        //     outputsText = outputsText.concat(
-        //         "-map '[v", row,"]' -c:v ",
-        //         dataTable.rows[row].cells[2].children[0].value, " ",
-        //         "-maxrate ", dataTable.rows[row].cells[3].children[0].value, "M ",
-        //         "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 ",
-        //         // Preview
-        //         "-map '[scale", row,"]' -c:v ",
-        //         "libx264", " ",
-        //         "-maxrate ", "1M ",
-        //         "videos/preview", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
-        //     );
-        //     streamsToActivate.push(dataTable.rows[row].cells[4].children[0].value)
-        // }
-
         for (row = 0; row < dataTable.rows.length; row++){
             if(dataTable.rows[row].cells[0].children[0].checked== true){
                 counter ++;
@@ -185,28 +125,11 @@ function tableInfo(){
                     dataTable.rows[row].cells[1].children[0].value,
                     " ! flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\),format=NV12,width=3840,height=2160 ! glcolorconvert ! video/x-raw\(memory:GLMemory\),format=RGBA,width=3840,height=2160 ! mix. "
                 );
-                // if(row != 0) {filterText = filterText.concat(";");}
-                // filterText = filterText.concat(
-                //     "[", row, ":v]copy[v",row,"]"
-                // );
-                // outputsText = outputsText.concat(
-                //     "-map '[v", row,"]' -c:v ",
-                //     dataTable.rows[row].cells[2].children[0].value, " ",
-                //     "-maxrate ", dataTable.rows[row].cells[3].children[0].value, "M ",
-                //     "videos/", dataTable.rows[row].cells[4].children[0].value, ".m3u8 "
-                // );
             }
         }
-
-
-
     }
-    // if (counter == 1) {
-    //     return ["ffmpeg -hwaccel cuda ".concat(inputsText, " -vf 'scale=",videoWidth,":",videoHeight,"'", outputsText.substr(11)), streamsToActivate];
-    // }
     return ["gst-launch-1.0 -e ".concat(inputsText, filterText), streamsToActivate];
 }
-
 
 function updateCommand(){
     command.textContent=tableInfo()[0];
@@ -230,25 +153,20 @@ async function ffmpegStart(){
         fetch('http://172.16.0.78:5000/playfab/stream/'.concat(tableStreams[1][stream], '/on/'))
         .then(response => {
             if (response.ok) {
-            return response.json(); // Parse the response data as JSON
+            return response.json();
             } else {
             throw new Error('API request failed');
             }
         })
         .then(data => {
-            // Process the response data here
-            // Example: Logging the data to the console
             console.log(tableStreams[1][stream], data["success"])
         })
         .catch(error => {
-            // Handle any errors here
-            console.error(error); // Example: Logging the error to the console
+            console.error(error);
         });
     }
     
     videoSource.setAttribute('src','http://172.16.0.78:5000/file/preview/preview'.concat(tableStreams[1], '.m3u8'))
-
-    // alert('http://172.16.0.78:5000/file/preview/preview'.concat(tableStreams[1], '.m3u8'));
 
 }
 
@@ -266,6 +184,4 @@ function ffmpegStop(){
     fetch('http://172.16.0.78:5000/ffmpeg/stop/');
     alert('Y-Y')
 }
-
-// console.log(tableInfo());
 getStreamNames();

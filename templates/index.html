@@ -15,9 +15,7 @@
                 <tr>
                     <th class="size-1">ACTIVE</th>
                     <th class="size-5">CAMARA URL</th>
-                    <th class="size-2">CODEC</th>
-                    <th class="size-2">BIT RATE (Mb)</th>
-                    <th class="size-2">STREAM NAME</th>
+
                 </tr>
             </table>
             <table class="main-table" id="main-table">
@@ -28,20 +26,6 @@
                         <td class="size-5">
                             <input onchange="updateCommand()" type="text">
                         </td>
-                        <td class="size-2">
-                            <select name="codecs" id="codecs-select">
-                                <option value="hevc_nvenc">h265</option>
-                                <option value="libx264">h264</option>
-                            </select>
-                        </td>
-                        <td class="size-2">
-                            <input onchange="updateCommand()" type="number" value="10">
-                            <span>Mb/s</span>
-                        </td>
-                        <td class="size-2">
-                            <select name="stream-name" class="test-select"></select>
-                            <span>.m3u8</span>
-                        </td>
                     </tr>
                     <tr>
                         <td class="size-1">
@@ -50,20 +34,6 @@
                         <td class="size-5">
                             <input onchange="updateCommand()" type="text">
                         </td>
-                        <td class="size-2">
-                            <select name="codecs" id="codecs-select">
-                                <option value="hevc_nvenc">h265</option>
-                                <option value="libx264">h264</option>
-                            </select>
-                        </td>
-                        <td class="size-2">
-                            <input onchange="updateCommand()" type="number" value="10">
-                            <span>Mb/s</span>
-                        </td>
-                        <td class="size-2">
-                            <select name="stream-name" class="test-select"></select>
-                            <span>.m3u8</span>
-                        </td>
                     </tr>
                     <tr>
                         <td class="size-1">
@@ -71,20 +41,6 @@
                         </td>
                         <td class="size-5">
                             <input onchange="updateCommand()" type="text">
-                        </td>
-                        <td class="size-2">
-                            <select name="codecs" id="codecs-select">
-                                <option value="hevc_nvenc">h265</option>
-                                <option value="libx264">h264</option>
-                            </select>
-                        </td>
-                        <td class="size-2">
-                            <input onchange="updateCommand()" type="number" value="10">
-                            <span>Mb/s</span>
-                        </td>
-                        <td class="size-2">
-                            <select name="stream-name" class="test-select"></select>
-                            <span>.m3u8</span>
                         </td>
                     </tr>
                     <tr class="active-row">
@@ -93,27 +49,40 @@
                         </td>
                         <td class="size-5">
                             <input onchange="updateCommand()" type="text"></td>
-                        <td class="size-2">
-                            <select name="codecs" id="codecs-select">
-                                <option value="hevc_nvenc">h265</option>
-                                <option value="libx264">h264</option>
-                            </select>
+                    </tr>
+                    <tr>
+                        <td class="size-1">
+                            <input onchange="updateCommand()" type="checkbox">
                         </td>
-                        <td class="size-2">
-                            <input onchange="updateCommand()" type="number" value="10">
-                            <span>Mb/s</span>
-                        </td>
-                        <td class="size-2">
-                            <select name="stream-name" class="test-select"></select>
-                            <span>.m3u8</span>
+                        <td class="size-5">
+                            <input onchange="updateCommand()" type="text">
                         </td>
                     </tr>
+                    <tr>
+                        <td class="size-1">
+                            <input onchange="updateCommand()" type="checkbox">
+                        </td>
+                        <td class="size-5">
+                            <input onchange="updateCommand()" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="size-1">
+                            <input onchange="updateCommand()" type="checkbox">
+                        </td>
+                        <td class="size-5">
+                            <input onchange="updateCommand()" type="text">
+                        </td>
+                    </tr>
+                    <tr class="active-row">
+                        <td class="size-1">
+                            <input onchange="updateCommand()" type="checkbox">
+                        </td>
+                        <td class="size-5">
+                            <input onchange="updateCommand()" type="text"></td>
+                    </tr>
             </table>
-            <div id="action-div" class="container-action">
-                <button onclick="ffmpegStart()" class="main-button"> <span>start</span> </button>
-                <button onclick="ffmpegStop()" class="secundary-button"> <span>stop</span> </button>
-        
-            </div>
+            
         </div>
         <div id="status-div" class="container-status">
             <div id="main-status-div" class="container-main-status">
@@ -174,12 +143,13 @@
                 <br>
                 <span id="observer-text"></span>
             </div>
+            <div id="action-div" class="container-action">
+                <select id="stream-name" class="test-select"></select>
+                <button onclick="ffmpegStart()" class="main-button"> <span>start</span> </button>
+                <button onclick="ffmpegStop()" class="secundary-button"> <span>stop</span> </button>
+            </div>
         </div>
     </div>
-    <input onchange="updateCommand()" type="text" id="width" value="8160">
-    <span>:</span>
-    <input onchange="updateCommand()" type="text" id="height" value="3616">
-
     <script src="{{url_for('static', filename='chart.js')}}"></script>
     <script src="{{url_for('static', filename='main.js')}}"></script>
     <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
