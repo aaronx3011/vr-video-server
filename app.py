@@ -18,7 +18,16 @@ load_dotenv('.env')
 def createApp():
     app = Flask(__name__)
     app.config['CORS_HEADERS'] = 'Content-Type'
-    app.config['SERVER_IP'] = net.getLocalIPv4()
+    app.config['SERVER_IP'] = ''
+    while True:
+        try:
+            app.config['SERVER_IP'] = net.getLocalIPv4()
+        except:
+            pass
+        finally:
+            if app.config['SERVER_IP'] !='':
+                break
+
 
     from routes.publicidad import blueprint
     app.register_blueprint(blueprint.publicidad_bp)
@@ -60,4 +69,4 @@ def videoStream():
 
 
 if __name__ == '__main__':
-    sio.run(app, host='0.0.0.0', debug = True)
+    sio.run(app, host='0.0.0.0', debug = True, allow_unsafe_werkzeug=True)
