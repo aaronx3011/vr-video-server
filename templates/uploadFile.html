@@ -1,0 +1,18 @@
+<script>
+    const SERVER_IP = "{{SERVER_IP}}"
+</script>
+<div id="ffmpeg-output" class="container-output">
+    <span id="ffmpeg-text"></span>
+    <br>
+    <span id="observer-text"></span>
+</div>
+<form method=post enctype=multipart/form-data action="/file/upload/">
+    <input id="template-input" type=file name=file>
+    <input type=submit value=Upload >
+</form>
+<div>
+    <input type="button" onclick="uploadStart()" value="aws">
+
+</div>
+
+<script src="{{url_for('static', filename='uploadFile.js')}}"></script>

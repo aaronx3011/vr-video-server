@@ -1,0 +1,15 @@
+<script>
+    const SERVER_IP = "{{SERVER_IP}}"
+</script>
+<div id="ffmpeg-output" class="container-output">
+    <span id="ffmpeg-text"></span>
+    <br>
+    <span id="observer-text"></span>
+</div>
+<form method=post enctype=multipart/form-data action="/publicidad/upload/">
+    <input id="template-input" type=file name=file>
+    <input type=submit value=Upload >
+</form>
+
+<input type="button" onclick="uploadStart()" value="test">
+<script src="{{url_for('static', filename='cargaPublicidad.js')}}"></script>

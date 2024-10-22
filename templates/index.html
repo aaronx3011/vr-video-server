@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="../static/styles/styles.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
+    <script>
+        const SERVER_IP = "{{SERVER_IP}}"
+    </script>
+    <style>
+        input::placeholder {
+            font-size: small;
+            text-align: start;
+            font-weight: 400;
+        }
+    </style>
+
+</head>
+
+<body class="VRINSITU">
+    <section class=" h-screen bg-[#2d2d2d] flex flex-col justify-center p-4 lg:p-4 w-full gap-5 ">
+        <header>
+            <img src="{{ url_for('static',filename='img/VRINSITU_Vertical_Blanco.png') }}" class="w-[200px]  mr-auto" alt="">
+        </header>
+     
+        <article class="flex flex-col-reverse lg:flex-row  w-full gap-14 h-auto justify-center ">
+
+            <section id="config"
+                class="rounded-lg bg-[#474747]  w-full lg:w-[500px] text-white font-semibold p-2 px-5 flex flex-col gap-5">
+                <h3 class="text-xl">Configuracion</h3>
+
+
+
+                <div id="action-div" class="container-action  p-2">
+                    <p>Template file</p>
+                    <form method="post" enctype="multipart/form-data" action="/file/template/upload/" class="space-y-4">
+                        <div
+                            class="flex flex-col items-center justify-center w-full h-16 rounded-lg border-2 border-dashed border-gray-500 hover:border-blue-500 transition duration-300 ease-in-out">
+                            <label for="template-input"
+                                class="flex flex-col items-center justify-center cursor-pointer h-full w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span id="file-name" class="mt-2 text-sm text-gray-200">Click to upload</span>
+                            </label>
+                            <input id="template-input" type="file" name="file" class="hidden"
+                                onchange="displayFileName()">
+                        </div>
+                        <input type="submit" value="Upload"
+                            class="px-4 py-2 hover:bg-blue-700 bg-blue-600 text-white rounded  transition duration-300 ease-in-out cursor-pointer w-full">
+                    </form>
+                    <div class="flex flex-col gap-2 mt-4">
+
+                        <label for="stream-name" class="text-sm">Stream name</label>
+                        <select id="stream-name"
+                            class="test-select p-2 w-full bg-transparent border border-gray-200 text-white rounded"></select>
+
+                    </div>
+                </div>
+
+                <div id="list-server" class="flex flex-col gap-3">
+                    <p>Camaras</p>
+                    <div class="flex flex-row gap-4 ">
+
+                        <input onchange="updateCommand()" type="checkbox">
+
+                        <input
+                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            placeholder="camera url 8" onchange="updateCommand()" type="text">
+                    </div>
+
+                    <div class="flex flex-row gap-4">
+
+                        <input onchange="updateCommand()" type="checkbox">
+                        <input
+                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            placeholder="camera url 7" onchange="updateCommand()" type="text">
+                    </div>
+                    <div class="flex flex-row gap-4">
+
+                        <input onchange="updateCommand()" type="checkbox">
+                        <input
+                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            placeholder="camera url 6" onchange="updateCommand()" type="text">
+                    </div>
+                    <div class="flex flex-row gap-4">
+
+                        <input onchange="updateCommand()" type="checkbox">
+                        <input
+                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            placeholder="camera url 5" onchange="updateCommand()" type="text">
+                    </div>
+                    <div class="flex flex-row gap-4">
+
+                        <input onchange="updateCommand()" type="checkbox">
+                        <input
+                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            placeholder="camera url 4" onchange="updateCommand()" type="text">
+                    </div>
+                    <div class="flex flex-row gap-4">
+
+                        <input onchange="updateCommand()" type="checkbox">
+                        <input
+                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            placeholder="camera url 3" onchange="updateCommand()" type="text">
+                    </div>
+                    <div class="flex flex-row gap-4">
+
+                        <input onchange="updateCommand()" type="checkbox">
+                        <input
+                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            placeholder="camera url 2" onchange="updateCommand()" type="text">
+                    </div>
+                    <div class="flex flex-row gap-4">
+
+                        <input onchange="updateCommand()" type="checkbox">
+                        <input
+                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            placeholder="camera url 1" onchange="updateCommand()" type="text">
+
+
+                    </div>
+
+                </div>
+                <div class="w-full flex flex-row gap-7">
+                    <button onclick="stitcherStart()" class="main-button w-full hover:bg-blue-700 bg-blue-600  transition duration-300 ease-in-out p-2 rounded">
+                        <span>start</span> </button>
+                    <button onclick="stitcherStop()" class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
+                        <span>stop stitching</span> </button>
+                    <button onclick="observerStop()" class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
+                        <span>stop observer</span> </button>
+                    <button onclick="clearBucketS3()" class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
+                        <span>clear Bucket</span> </button>
+                    <button onclick="clearFolder()" class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
+                        <span>clear Folder</span> </button>
+                </div>
+            
+
+
+            </section>
+
+
+            <div class="flex flex-col">
+                <section id="info"
+                    class="rounded-lg h-auto  w-full lg:w-[600px]  text-white font-semibold flex flex-col gap-5 relative">
+
+                    <div class="  mx-auto w-full">
+                        <video id="my-video" class="video-js vjs-big-play-centered vjs-theme-sea" controls loop autoplay
+                            preload="auto" fluid="true" poster="" data-setup='{}'>
+                            <source id="video-source" src="http://192.168.88.9:5000/file/preview/previewplaylist.m3u8"
+                                type="application/x-mpegURL">
+                        </video>
+
+                    </div>
+
+                    <button onclick="reloadVideo()" class="secundary-button w-auto hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded absolute right-2 top-5 z-20">
+                        <img src="{{ url_for('static',filename='img/reload.png') }}" class="w-5 h-5" /> </button>
+                </section>
+                <section id="info-camera" class="rounded-lg rounded-t-l-none rounded-t-r-none bg-[#474747] h-auto  w-full lg:w-[600px]  text-white font-semibold flex flex-col gap-5">
+                    <article class="w-full  flex flex-row gap-2 justify-center text-white font-semibold text-sm mt-2">
+                        <div id="cam1" name="cam1"
+                            class="flex flex-row gap-2 p-1 bg-white/0 hover:bg-white/5  rounded-lg cursor-pointer border border-gray-200/50  transition transition-all text-center cam"
+                            onclick="changeCamera(this.id)">
+                            <img src="{{ url_for('static',filename='img/camera.png') }}" class="w-5 h-5" />
+                            <p>Camara 1</p>
+                        </div>
+                        <div id="cam2" name="cam2"
+                            class="flex flex-row gap-2 p-1 bg-white/0 hover:bg-white/5 rounded-lg cursor-pointer border border-gray-200/50 transition transition-all text-center cam"
+                            onclick="changeCamera(this.id)">
+                            <img src="{{ url_for('static',filename='img/camera.png') }}" class="w-5 h-5" />
+                            <p>Camara 2</p>
+                        </div>
+                        <div id="cam3" name="cam3"
+                            class="flex flex-row gap-2 p-1 bg-white/0 hover:bg-white/5 rounded-lg cursor-pointer border  border-gray-200/50 transition transition-all text-center cam"
+                            onclick="changeCamera(this.id)">
+                            <img src="{{ url_for('static',filename='img/camera.png') }}" class="w-5 h-5" />
+                            <p>Camara 3</p>
+                        </div>
+                        <div id="cam4" name="cam4"
+                            class="flex flex-row gap-2 p-1 bg-white/0 hover:bg-white/5 rounded-lg cursor-pointer border border-gray-200/50 transition transition-all text-center cam"
+                            onclick="changeCamera(this.id)">
+                            <img src="{{ url_for('static',filename='img/camera.png') }}" class="w-5 h-5" />
+                            <p>Camara 4</p>
+                        </div>
+                    </article>
+
+
+                    <div id="main-status-div" class="container-main-status flex  flex-col   justify-start gap-7 px-5">
+                        <div id="resources-div" class="container-resources ">
+                            <ul id="resources" class="flex gap-15 justify-center text-center">
+                                <li>
+                                    <label for="cpu"> CPU [%]: </label>
+                                    <span id="cpu" class="font-normal"> 0% </span>
+                                </li>
+                                <li>
+                                    <label for="ram"> RAM [%]: </label>
+                                    <span id="ram" class="font-normal"> 0% </span>
+                                </li>
+                                <li>
+                                    <label for="gpu"> GPU [%]: </label>
+                                    <span id="gpu" class="font-normal"> 0% </span>
+                                </li>
+                                <li>
+                                    <label for="vram"> VRAM [%]: </label>
+                                    <spana id="vram" class="font-normal"> 0% </span>
+                                </li>
+                                <li>
+                                    <label for="decoder"> DECODER [%]: </label>
+                                    <span id="decoder" class="font-normal"> 0% </span>
+                                </li>
+                                <li>
+                                    <label for="encoder"> ENCODER [%]: </label>
+                                    <span id="encoder" class="font-normal"> 0% </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="chart-container" class="container-chart  w-full lg:w-[100%]  fill-white text-white ">
+                            <canvas id="myChart" width="500" height="200"></canvas>
+                        </div>
+
+                    </div>
+
+                    <div class="w-full  px-5 pb-3  lg:mt-0">
+
+                        <p>Console</p>
+                        <div id="ffmpeg-output"
+                            class="container-output bg-black text-gray-300 p-4  rounded-lg font-mono overflow-auto max-h-64">
+                            <span id="ffmpeg-text"></span>
+                            <br>
+                            <span id="observer-text"></span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </article>
+
+
+    </section>
+    <script>
+        function displayFileName() {
+            var input = document.getElementById('template-input');
+            var fileName = input.files[0].name;
+            document.getElementById('file-name').textContent = fileName;
+        }
+    </script>
+    <script src="{{url_for('static', filename='chart.js')}}"></script>
+    <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+    <script src="https://unpkg.com/videojs-contribhls/dist/videojs-contrib-hls.js"></script>
+    <script>
+        var player = videojs('my-video');
+    </script>
+    <script src="{{url_for('static', filename='main.js')}}"></script>
+</body>
+
+</html>

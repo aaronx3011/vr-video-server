@@ -1,0 +1,12 @@
+__pycache__/
+videos/*.ts
+videos/*.mp4
+publicidad/*
+banners/*
+preview/*
+gstreamerCommands/
+include/
+bin/
+lib64/
+lib64/*
+lib/

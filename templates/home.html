@@ -1,0 +1,18 @@
+<!DOCTYPE html> 
+  
+    <html> 
+        <head> 
+            <title>home</title> 
+        </head> 
+        <body> 
+        
+            <ol> 
+            {%for i in range(0, len)%} 
+            
+                <a href="/stream/{{Streams[i].__dict__['requested']}}"><li>{{Streams[i].__dict__["requested"]}}({{Streams[i].__dict__["id"]}}): {{Streams[i].__dict__["last"]}}</li></a> 
+            {%endfor%} 
+            
+            </ol> 
+            
+        </body> 
+    </html>
