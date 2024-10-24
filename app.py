@@ -53,9 +53,6 @@ def createApp():
     from routes.stitcher import blueprint
     app.register_blueprint(blueprint.stitcher_bp)
 
-    from routes.audio import blueprint
-    app.register_blueprint(blueprint.audio_bp)
-
     return app
 
 app = createApp()
