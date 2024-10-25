@@ -9,6 +9,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css
+
+
+
+    ">
     <script>
         const SERVER_IP = "{{SERVER_IP}}"
     </script>
@@ -22,12 +27,43 @@
 
 </head>
 
-<body class="VRINSITU">
-    <section class=" h-screen bg-[#2d2d2d] flex flex-col justify-center p-4 lg:p-4 w-full gap-5 ">
-        <header>
-            <img src="{{ url_for('static',filename='img/VRINSITU_Vertical_Blanco.png') }}" class="w-[200px]  mr-auto" alt="">
-        </header>
-     
+<body class="VRINSITU bg-[#2d2d2d] ">
+    <section class="bg-[#2d2d2d] flex flex-col justify-center p-4 pt-[8rem] xl:pt-4 xl:p-4 xl:pl-[16rem] pl-4 w-full gap-5 relative">
+
+
+        <section id="navbar"
+            class="bg-[#1c1c1c] fixed inset-x-0  top-0 xl:inset-x-0 xl:bottom-0  w-full xl:w-[250px]  p-2 flex flex-col text-white gap-5 z-[1000] h-[80px] xl:h-full overflow-hidden ">
+            <header class="flex justify-between">
+                <img src="{{ url_for('static',filename='img/VRINSITU_Vertical_Blanco.png') }}"
+                    class="w-[200px]  mr-auto" alt="">
+                <button id="openNav"><i class="fa-solid fa-bars text-3xl block xl:hidden"></i></button>
+            </header>
+
+
+
+            <hr>
+            <h1 class="font-bold">Opciones Avanzadas</h1>
+            <div class="flex flex-row flex-wrap gap-5">
+
+
+                <button onclick="stitcherStop()"
+                    class="secundary-butto w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
+                    <span>stop stitching</span> </button>
+                <button onclick="observerStop()"
+                    class="secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
+                    <span>stop observer</span> </button>
+                <button onclick="clearBucketS3()"
+                    class="secundary-button  w-full border-2  border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
+                    <span>clear Bucket</span> </button>
+                <button onclick="clearFolder()"
+                    class="secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
+                    <span>clear Folder</span> </button>
+
+            </div>
+
+
+        </section>
+
         <article class="flex flex-col-reverse lg:flex-row  w-full gap-14 h-auto justify-center ">
 
             <section id="config"
@@ -127,21 +163,28 @@
 
 
                     </div>
-
+                    <button onclick="stitcherStart()"
+                        class="px-4 py-2 hover:bg-blue-700 bg-blue-600 text-white rounded  transition duration-300 ease-in-out cursor-pointer w-full">
+                        <span>start</span> </button>
                 </div>
                 <div class="w-full flex flex-row gap-7">
-                    <button onclick="stitcherStart()" class="main-button w-full hover:bg-blue-700 bg-blue-600  transition duration-300 ease-in-out p-2 rounded">
+                    <!-- <button onclick="stitcherStart()"
+                        class="main-button w-full hover:bg-blue-700 bg-blue-600  transition duration-300 ease-in-out p-2 rounded">
                         <span>start</span> </button>
-                    <button onclick="stitcherStop()" class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
+                    <button onclick="stitcherStop()"
+                        class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
                         <span>stop stitching</span> </button>
-                    <button onclick="observerStop()" class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
+                    <button onclick="observerStop()"
+                        class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
                         <span>stop observer</span> </button>
-                    <button onclick="clearBucketS3()" class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
+                    <button onclick="clearBucketS3()"
+                        class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
                         <span>clear Bucket</span> </button>
-                    <button onclick="clearFolder()" class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
-                        <span>clear Folder</span> </button>
+                    <button onclick="clearFolder()"
+                        class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
+                        <span>clear Folder</span> </button> -->
                 </div>
-            
+
 
 
             </section>
@@ -160,11 +203,13 @@
 
                     </div>
 
-                    <button onclick="reloadVideo()" class="secundary-button w-auto hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded absolute right-2 top-5 z-20">
+                    <button onclick="reloadVideo()"
+                        class="secundary-button w-auto hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded absolute right-2 top-5 z-20">
                         <img src="{{ url_for('static',filename='img/reload.png') }}" class="w-5 h-5" /> </button>
                 </section>
-                <section id="info-camera" class="rounded-lg rounded-t-l-none rounded-t-r-none bg-[#474747] h-auto  w-full lg:w-[600px]  text-white font-semibold flex flex-col gap-5">
-                    <article class="w-full  flex flex-row gap-2 justify-center text-white font-semibold text-sm mt-2">
+                <section id="info-camera"
+                    class="rounded-lg rounded-t-l-none rounded-t-r-none bg-[#474747] h-auto  w-full lg:w-[600px]  text-white font-semibold flex flex-col gap-5">
+                    <!-- <article class="w-full  flex flex-row gap-2 justify-center text-white font-semibold text-sm mt-2">
                         <div id="cam1" name="cam1"
                             class="flex flex-row gap-2 p-1 bg-white/0 hover:bg-white/5  rounded-lg cursor-pointer border border-gray-200/50  transition transition-all text-center cam"
                             onclick="changeCamera(this.id)">
@@ -189,7 +234,7 @@
                             <img src="{{ url_for('static',filename='img/camera.png') }}" class="w-5 h-5" />
                             <p>Camara 4</p>
                         </div>
-                    </article>
+                    </article> -->
 
 
                     <div id="main-status-div" class="container-main-status flex  flex-col   justify-start gap-7 px-5">
@@ -245,6 +290,8 @@
 
     </section>
     <script>
+
+
         function displayFileName() {
             var input = document.getElementById('template-input');
             var fileName = input.files[0].name;
