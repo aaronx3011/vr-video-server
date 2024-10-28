@@ -13,11 +13,6 @@ let streamsNames = [];
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-
-
-
-
-
 const $navbar = document.querySelector("#navbar");
 const $buttonNav = document.getElementById("openNav");
 
@@ -32,24 +27,6 @@ $buttonNav.addEventListener("click", (e) => {
 
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 async function updateVideo(url) {
   console.log("antes");
   await delay(10000);
@@ -58,7 +35,6 @@ async function updateVideo(url) {
   player.src(url);
   player.load();
   player.play();
-  // video.reset();
 }
 
 async function createMaster(dir, streamsDict, streamName) {
@@ -100,7 +76,7 @@ function clearOption() {
 function addOption(text, value) {
   let selects = document.getElementsByClassName("test-select");
   for (let i = 0; i < selects.length; i++) {
-    let newOption = new Option(text, value); // Create a new Option object
+    let newOption = new Option(text, value); 
     selects[i].appendChild(newOption);
   }
 }
