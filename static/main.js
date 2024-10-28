@@ -165,22 +165,22 @@ function tableInfo() {
   filterText =
     " gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/".concat(
       templateName,
-      " ! video/x-raw(memory:GLMemory),format=RGBA,width=7680,height=4320 ! tee name=t t. ! queue ! nvh265enc preset=1 ! h265parse ! queue ! mux. alsasrc device=hw:1 ! queue ! audioconvert ! audioresample ! audio/x-raw,rate=44100,channels=2,width=16 ! avenc_aac ! aacparse ! tee name=at at. ! queue ! mpegtsmux name=mux ! hlssink target-duration=20 location=videos/high/8k",
+      " ! video/x-raw(memory:GLMemory),format=RGBA,width=7680,height=4320 ! tee name=t t. ! queue ! nvh265enc preset=1 ! h265parse ! queue ! mux. alsasrc device=hw:1 ! queue ! audioconvert ! audioresample ! audio/x-raw,rate=44100,channels=2,width=16 ! avenc_aac ! aacparse ! tee name=at at. ! queue ! mpegtsmux name=mux ! hlssink target-duration=30 location=videos/high/8k",
       streamName.options[streamName.selectedIndex].text,
       "%05d.ts playlist-location=videos/high/8k",
       streamName.options[streamName.selectedIndex].text,
       ".m3u8 t.",
-      " ! queue ! glcolorscale ! video/x-raw(memory:GLMemory),width=3840,height=2160 ! nvh265enc preset=1 ! h265parse ! mux1. at. ! queue ! mpegtsmux name=mux1 ! hlssink target-duration=20 location=videos/high/4k",
+      " ! queue ! glcolorscale ! video/x-raw(memory:GLMemory),width=3840,height=2160 ! nvh265enc preset=1 ! h265parse ! mux1. at. ! queue ! mpegtsmux name=mux1 ! hlssink target-duration=30 location=videos/high/4k",
       streamName.options[streamName.selectedIndex].text,
       "%05d.ts playlist-location=videos/high/4k",
       streamName.options[streamName.selectedIndex].text,
       ".m3u8 t.",
-      " ! queue ! glcolorscale ! video/x-raw(memory:GLMemory),width=2560,height=1440 ! nvh264enc preset=1 ! h264parse ! mux2. at. ! queue ! mpegtsmux name=mux2 ! hlssink target-duration=20 location=videos/low/2k",
+      " ! queue ! glcolorscale ! video/x-raw(memory:GLMemory),width=2560,height=1440 ! nvh264enc preset=1 ! h264parse ! mux2. at. ! queue ! mpegtsmux name=mux2 ! hlssink target-duration=30 location=videos/low/2k",
       streamName.options[streamName.selectedIndex].text,
       "%05d.ts playlist-location=videos/low/2k",
       streamName.options[streamName.selectedIndex].text,
       ".m3u8 t.",
-      " ! queue ! glcolorscale ! video/x-raw(memory:GLMemory),width=1920,height=1080 ! nvh264enc preset=1 ! h264parse ! mux3. at. ! queue ! mpegtsmux name=mux3 ! hlssink target-duration=20 location=videos/low/1k",
+      " ! queue ! glcolorscale ! video/x-raw(memory:GLMemory),width=1920,height=1080 ! nvh264enc preset=1 ! h264parse ! mux3. at. ! queue ! mpegtsmux name=mux3 ! hlssink target-duration=30 location=videos/low/1k",
       streamName.options[streamName.selectedIndex].text,
       "%05d.ts playlist-location=videos/low/1k",
       streamName.options[streamName.selectedIndex].text,
@@ -251,11 +251,11 @@ async function stitcherStart() {
     "low/",
     [
       {
-        bandwidth: 25000000,
+        bandwidth: 20000000,
         stream: "2k".concat(tableStreams[1], ".m3u8"),
       },
       {
-        bandwidth: 5000000,
+        bandwidth: 10000000,
         stream: "1k".concat(tableStreams[1], ".m3u8"),
       },
     ],
@@ -265,11 +265,11 @@ async function stitcherStart() {
     "high/",
     [
       {
-        bandwidth: 50000000,
+        bandwidth: 45000000,
         stream: "8k".concat(tableStreams[1], ".m3u8"),
       },
       {
-        bandwidth: 40000000,
+        bandwidth: 25000000,
         stream: "4k".concat(tableStreams[1], ".m3u8"),
       },
     ],

@@ -99,3 +99,12 @@ def uploadFiles():
 
     if request.method == 'GET':
         return render_template("uploadFile.html", SERVER_IP = current_app.config["SERVER_IP"])
+
+
+@file_bp.route("/transmision/low/<string:filename>")
+def getStreamLow(filename):
+    return send_from_directory(os.getcwd() + "/videos/low/", path=filename, as_attachment=False)
+
+@file_bp.route("/transmision/high/<string:filename>")
+def getStreamHigh(filename):
+    return send_from_directory(os.getcwd() + "/videos/high/", path=filename, as_attachment=False)
