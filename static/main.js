@@ -13,6 +13,43 @@ let streamsNames = [];
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
+
+
+
+
+
+const $navbar = document.querySelector("#navbar");
+const $buttonNav = document.getElementById("openNav");
+
+let isOpen = false;
+$buttonNav.addEventListener("click", (e) => {
+
+  console.log("console.log()")
+
+  $navbar.classList.toggle("h-[80px]")
+  isOpen = false;
+
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 async function updateVideo(url) {
   console.log("antes");
   await delay(10000);
@@ -38,7 +75,7 @@ async function createMaster(dir, streamsDict, streamName) {
 }
 
 window.onload = () => {
-  
+
   $cameras.forEach((el) => {
     const id = el.id;
     const path = window.location.pathname;
@@ -106,7 +143,7 @@ setInterval(() => {
   fetch(`http://${SERVER_IP}:5000/resources/usage/`)
     .then((response) => {
       if (response.ok) {
-        return response.json(); 
+        return response.json();
       } else {
         throw new Error("API request failed");
       }
@@ -128,7 +165,7 @@ setInterval(() => {
       addData(chart, Number(data["utilization.gpu [%]"]));
     })
     .catch((error) => {
-      console.error(error); 
+      console.error(error);
     });
 }, 500);
 
