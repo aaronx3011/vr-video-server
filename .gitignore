@@ -17,3 +17,5 @@ lib/
 .env
 Scripts/
 stitch-templates/*
+lib64
+pyvenv.cfg
