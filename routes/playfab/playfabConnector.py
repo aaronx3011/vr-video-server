@@ -1,10 +1,16 @@
 import json
 import playfab
 
-playfab.PlayFabSettings.TitleId = "29E1D"
-playfab.PlayFabSettings.DeveloperSecretKey = "O3GO7SA6S63CI3D9KOIN7KI7SCUM6TJBCM66TIQCBDIRNEN8OF"
+import os
+from dotenv import load_dotenv
 
-ACCOUNT_LINK_ID = "548E91C355E6FAB2"
+
+
+load_dotenv(".env")
+
+playfab.PlayFabSettings.TitleId = os.getenv("TitleId")
+playfab.PlayFabSettings.DeveloperSecretKey = os.getenv("DeveloperSecretKey")
+ACCOUNT_LINK_ID = os.getenv("ACCOUNT_LINK_ID")
 
 
 StreamsDispnibles = {

@@ -16,3 +16,4 @@ lib64/*
 lib/
 .env
 Scripts/
+stitch-templates/*
