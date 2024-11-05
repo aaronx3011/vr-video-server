@@ -87,7 +87,6 @@
                 alert("No file selected");
                 return;
             }
-
             let fileName = file.files[0].name;
             fetch(`http://${SERVER_IP}:5000/publicidad/start/`, {
                 method: "POST",
@@ -124,4 +123,4 @@
                     console.error(error);
                 });
 
-        }, 5000); // Intervalo de 5 segundos para comprobar el estado
+        }, 50);

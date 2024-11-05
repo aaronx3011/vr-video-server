@@ -1,5 +1,6 @@
 Flask
 flask_cors
 psutil
-dotenv
-boto3
+python_dotenv
+flask_socketio
+playfab

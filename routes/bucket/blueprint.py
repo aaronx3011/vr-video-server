@@ -15,9 +15,25 @@ def clearRecursive(folder):
     resp.status_code = 200
     return resp
 
-@bucket_bp.route("/sync/folder/", methods = ["GET"])
+@bucket_bp.route("/sync/folder/", methods = ["GET", "POST"])
 def syncFolderView():
-    return render_template('syncFolderAWS.html', SERVER_IP = current_app.config['SERVER_IP'])
+    if request.method == "GET":
+        return render_template('syncFolderAWS.html', SERVER_IP = current_app.config['SERVER_IP'])
+
+    if request.method == "POST":
+        data = request.get_json()
+        try:
+            bucket.syncFromLocalFolderToAWS(data["folderName"])
+            resp = jsonify(success = True)
+            resp.status_code = 200
+
+        except:
+            resp = jsonify(success = False)
+            resp.status_code = 500
+
+        finally:
+            return resp
+
 
 @bucket_bp.route("/sync/<string:folder>", methods = ["POST"]) 
 def syncFolder(folder):

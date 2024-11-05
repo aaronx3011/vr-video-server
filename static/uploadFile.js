@@ -21,7 +21,24 @@ async function handleFormSubmit(event) {
     })
     .then(response => response.json())
     .then(() => {
-        alert("Images uploaded successfully!");
+        fetch(`http://${SERVER_IP}:5000/bucket/sync/folder/`,
+            {
+                method: "POST",
+                body: JSON.stringify(
+                    {folderName: "banners"}
+                ),
+                headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                },
+            }
+        )
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('API request failed');
+            }
+        })
         document.getElementById("loading-text").classList.add("hidden");
     })
     .catch(error => {
