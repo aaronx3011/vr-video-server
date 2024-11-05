@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Upload Video</title>
+    <style>
+        /* Estilo para evitar que el navegador abra el archivo en otra pestaña al hacer drag and drop */
+        .drag-area {
+            transition: background-color 0.3s ease;
+        }
+
+        .drag-area.dragover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-[#2d2d2d]  flex flex-col gap-10 justify-center items-center h-screen">
+    <header>
+        <img src="{{ url_for('static',filename='img/VRINSITU_Vertical_Blanco.png') }}" class="w-[200px]  mr-auto" alt="">
+    </header>
+    <div class="bg-[#474747] p-6 rounded-lg shadow-lg max-w-lg w-full">
+        <h2 class="text-xl font-semibold text-gray-200 mb-4">Upload Video</h2>
+
+        <!-- Estado de carga de FFMPEG -->
+        <div id="ffmpeg-output" class="container-output mb-4">
+            <span id="ffmpeg-text" class="text-white"></span>
+        </div>
+
+        <!-- Previsualización del video -->
+        <div id="video-preview-container" class="hidden mb-4">
+            <video id="video-preview" class="w-full h-64 rounded-lg" controls></video>
+        </div>
+
+        <!-- Formulario para cargar archivos -->
+        <form id="upload-form" method="post" enctype="multipart/form-data" action="/publicidad/upload/" class="space-y-4" onsubmit="handleFormSubmit(event)">
+            <div id="drag-area" class="drag-area flex justify-center items-center bg-gray-700 p-4 rounded-lg border border-dashed border-gray-500">
+                <input id="template-input" type="file" name="file" accept="video/*" class="hidden">
+                <label for="template-input" class="cursor-pointer text-gray-400 hover:text-gray-300 flex flex-col items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span class="text-lg">Drag & Drop or Click to Upload</span>
+                </label>
+            </div>
+
+            <!-- Botones de enviar y remover -->
+            <div id="upload-buttons" class="flex items-center justify-between hidden">
+                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500">
+                    Upload Video
+                </button>
+                <button type="button" onclick="removeVideo()" class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-500">
+                    Remove Video
+                </button>
+            </div>
+
+            <div id="loading-text" class="hidden text-gray-300">
+                Uploading and processing video... Please wait.
+            </div>
+        </form>
+    </div>
+    <script src="{{url_for('static', filename='cargaPublicidad.js')}}"></script>
+
+</body>
+
+</html>

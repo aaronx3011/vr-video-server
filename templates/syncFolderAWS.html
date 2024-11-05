@@ -1,0 +1,14 @@
+<script>
+    const SERVER_IP = "{{SERVER_IP}}"
+</script>
+<div id="ffmpeg-output" class="container-output">
+    <span id="aws-status"></span>
+    <br>
+</div>
+
+<div>
+    <input type="text" id="folder-name-input">
+    <input type="button" onclick="syncFolders()" value="aws">
+</div>
+
+<script src="{{url_for('static', filename='syncFolder.js')}}"></script>

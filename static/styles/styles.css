@@ -1,0 +1,498 @@
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.ffmpeg-command-text {
+    font-size: 1em;
+    min-width: 1500px;
+    min-height: 50px;
+}
+
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+
+
+/********************************************************************
+************************ VR INSITU STYLES *************************** 
+********************************************************************/
+:root {
+    --main-bg-color: #00103a;
+    --tittle-bg-color: #004f9e;
+    --tittle-gradient-color: #0089c2;
+    --main-border-color: #6c77a1;
+    --secundary-border-color: #66bb93;
+    --secundary-bg-color: #3d4463;
+    --secundary-bg-gradient-color: #1d253b;
+    color: #FFF;
+    font-family: sans-serif;
+}
+
+
+.VRINSITU {
+    background-color: var(--main-bg-color);
+}
+
+.list-div {
+    background: linear-gradient(75deg, var(--secundary-bg-color) 0%, var(--secundary-bg-gradient-color) 100%);
+    width: 62%;
+}
+
+.tittle-table th {
+    /* border-color: var(--main-bg-color); */
+    background: linear-gradient(75deg, var(--tittle-bg-color) 0%, var(--tittle-gradient-color) 100%);
+    color: #ffffff;
+    padding: .5rem;
+    height: 40px;
+}
+
+.tittle-table {
+    border-spacing: .5rem;
+    padding: 20px 8px 0px 8px;
+}
+
+
+.main-table {
+    margin: 1rem;
+    border: 3px solid var(--main-border-color);
+    background-color: initial;
+    padding: .5rem;
+    color: #ffffff;
+    border-spacing: .5rem;
+
+}
+
+.main-table td{
+
+    padding: 20px;
+}
+
+
+
+.main-div {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px;
+    /* justify-content: space-around; */
+}
+
+.container-command {
+    padding: 10px;
+    border: 3px solid var(--main-border-color);
+    background: transparent;
+    width: 100% -40px;
+    height: 325px;
+
+}
+
+.container-status {
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: right;
+    width: 34%;
+    background-image: linear-gradient(75deg, var(--secundary-bg-color) 0%, var(--secundary-bg-gradient-color) 100%);
+}
+
+.container-chart {
+    width: 60%;
+    background: transparent;
+}
+
+.container-resources {
+    padding-top: 20px;
+    background: transparent;
+    width: 30%;
+}
+
+.container-resources ul {
+    list-style-type: none;
+
+}
+
+.container-resources li {
+    margin-bottom: 15px;
+}
+.container-main-status {
+    display: flex;
+    border: 3px solid var(--main-border-color);
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.container-output {
+    width: 100%;
+    border: 3px solid var(--main-border-color);
+    text-align: right;
+    min-height: 100px;
+    margin-top: 20px;
+}
+
+
+.main-button {
+  margin: 10px;
+  /* padding: 15px 30px; */
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.3s;
+  background-size: 200% auto;
+  color: white;
+  display: block;
+  border: 0px;
+  font-weight: 700;
+  box-shadow: 0px 0px 14px -7px #000000;
+  background-image: linear-gradient(75deg, var(--tittle-bg-color) 0%, var(--tittle-gradient-color) 100%);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 150px;
+  height: 40px;
+}
+
+.main-button:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.main-button:active {
+  transform: scale(0.95);
+}
+
+
+
+.secundary-button {
+    margin: 10px;
+    /* padding: 15px 30px; */
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.3s;
+    background-size: 200% auto;
+    color: white;
+    display: block;
+    border: 0px;
+    font-weight: 700;
+    box-shadow: 0px 0px 14px -7px #000000;
+    background-image: linear-gradient(75deg, var(--secundary-bg-color) 0%, var(--secundary-bg-gradient-color) 100%);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 150px;
+    height: 40px;
+  }
+  
+  .secundary-button:hover {
+    background-position: right center;
+    /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .secundary-button:active {
+    transform: scale(0.95);
+  }
+
+.container-action {
+    display: flex;
+    margin-left: 32%;
+}
+.checkbox-round {
+    width: 28px;
+    height: 28px;
+    position: relative;
+    margin: 20px auto;
+    background: #fcfff4;
+    background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    border-radius: 50px;
+    box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+
+    label {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        cursor: pointer;
+        background: linear-gradient(top, #222 0%, #45484d 100%);
+        border-radius: 50px;
+        box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 1);
+
+        &:after {
+            content: '';
+            width: 9px;
+            height: 5px;
+            position: absolute;
+            top: 5px;
+            left: 4px;
+            border: 3px solid #fcfff4;
+            border-top: none;
+            border-right: none;
+            background: transparent;
+            opacity: 0;
+            transform: rotate(-45deg);
+        }
+
+        &:hover::after {
+            opacity: 0.3;
+        }
+    }
+
+    input[type=checkbox] {
+        visibility: hidden;
+
+        &:checked+label:after {
+            opacity: 1;
+        }
+    }
+}
+
+
+/* 
+
+.main-table input[type="checkbox"] {
+    width: 3em;
+    height: 3rem;
+    accent-color: green;
+}
+
+.main-table input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    font-size: 2rem;
+    padding: 0.1rem;
+    border: 0.25rem solid green;
+    border-radius: 0.5rem;
+}
+
+.main-table input[type="checkbox"]::before {
+    content: "";
+    width: 1.4rem;
+    height: 1.4rem;
+    clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+    transform: scale(0);
+    background-color: green;
+}
+
+
+.main-table input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+.main-table input[type="checkbox"]:hover {
+    color: black;
+}
+
+ */
+
+/* 
+.main-table th {
+    border: 1px solid var(--main-border-color);
+
+} */
+
+.size-1 {
+    width: 5%;
+}
+
+.size-2 {
+    width: 10%;
+}
+
+.size-2 input {
+    width: 100%;
+}
+
+.size-5 {
+    width: 30%;
+}
+
+
+/* 
+* {
+    box-sizing: border-box;
+} */
+
+/* basic stylings ------------------------------------------ */
+
+/* form starting stylings ------------------------------- */
+
+input {
+    font-size: 18px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--main-border-color);
+    background-color: rgba(0, 0, 0, 0);
+    color: #FFF;
+}
+
+input:focus {
+    outline: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #000 !important;
+    -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* LABEL ======================================= */
+/* label {
+    color: #999;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 10px;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+} */
+
+/* active state */
+input:focus~label,
+input:valid~label,
+input:-webkit-autofill~label,
+input:-webkit-autofill:hover~label,
+input:-webkit-autofill:focus~label {
+    top: -20px;
+    font-size: 14px;
+    color: #5264AE;
+}
+
+/* BOTTOM BARS ================================= */
+.bar {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.bar:before,
+.bar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: #5264AE;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+.bar:before {
+    left: 50%;
+}
+
+.bar:after {
+    right: 50%;
+}
+
+/* active state */
+input:focus~.bar:before,
+input:focus~.bar:after,
+input:-webkit-autofill~.bar:before,
+input:-webkit-autofill:hover~.bar:before,
+input:-webkit-autofill:focus~.bar:before,
+input:-webkit-autofill~.bar:after,
+input:-webkit-autofill:hover~.bar:after,
+input:-webkit-autofill:focus~.bar:after {
+    width: 50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.highlight {
+    position: absolute;
+    height: 60%;
+    width: 100%;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* active state */
+input:focus~.highlight,
+input:-webkit-autofill~.highlight,
+input:-webkit-autofill:hover~.highlight,
+input:-webkit-autofill:focus~.highlight {
+    -webkit-animation: inputHighlighter 0.3s ease-in-out;
+    -moz-animation: inputHighlighter 0.3s ease-in-out;
+    animation: inputHighlighter 0.3s ease-in-out;
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+@-moz-keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+@keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
