@@ -19,3 +19,4 @@ Scripts/
 stitch-templates/*
 lib64
 pyvenv.cfg
+.vscode/*
