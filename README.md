@@ -20,12 +20,13 @@ The goal of this project is to streamline the process of creating, managing, and
 
 ## requirements
 
-  - GPU Drivers (we are usign NVIDIA 4090)
-  - Python >= 3.8.0
-  - Gstreamer (Core Library version >= 1.20.3)
+  - [GPU Drivers](https://ubuntu.com/server/docs/nvidia-drivers-installation)
+  - [nvidia-smi](https://ubuntu.com/server/docs/nvidia-drivers-installation)
+  - [Python >= 3.8.0](https://www.python.org/downloads/)
+  - [Gstreamer-Core Library version >= 1.20.3](https://gstreamer.freedesktop.org/documentation/installing/index.html?gi-language=c)
   - DMD Stitcher (gstreamer plugin)
-  - AWS CLI (aws-cli >=2.15.27)
-  - Inotify
+  - [AWS CLI >=2.15.27](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+  - [Inotify-tools](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
   - Playfab account
 
 
@@ -46,7 +47,7 @@ Go to the project directory
 Create virtual enviroment
 
 ```bash
-  python -m venv .
+  python3 -m venv .
 ```
 
 Activate the virtual enviroment (Linux/Ubuntu)
@@ -64,13 +65,13 @@ Activate the virtual enviroment (Windows)
 Install all the dependencies (Linux/Ubuntu)
 
 ```bash
-  pip install -r requirements.txt
+  pip install -r virtualenv.txt
 ```
 
 Install all the dependencies (Windows)
 
 ```bash
-  pip install -r requirementsWindows.txt
+  pip install -r virtualenv.txt
 ```
 
 Run the app
@@ -83,7 +84,9 @@ Run the app
 
 To run this project, you will need to add the following environment variables to your .env file
 
-- **AWS:** `AWS_ACCESS_KEY_ID` `AWS_SECRET_ACCESS_KEY` `AWS_REGION`
+- **AWS:** `AWS_ACCESS_KEY_ID` `AWS_SECRET_ACCESS_KEY` `AWS_REGION` `DEFAULT_BUCKET_NAME` `DEFAULT_BUCKET_LINK`
+
+- **FOLDERS** `DEFAULT_DOWNLOAD_FOLDER`
 
 - **PLAYFAB:** `TitleId` `DeveloperSecretKey` `ACCOUNT_LINK_ID`
 
