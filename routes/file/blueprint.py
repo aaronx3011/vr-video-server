@@ -98,7 +98,7 @@ def uploadFiles():
         return resp
 
     if request.method == 'GET':
-        return render_template("uploadFile.html", SERVER_IP = current_app.config["SERVER_IP"])
+        return render_template("uploadFile.html", SERVER_IP = current_app.config["SERVER_IP"], SERVER_PORT = current_app.config['SERVER_PORT'])
 
 
 @file_bp.route("/transmision/low/<string:filename>")

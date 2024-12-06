@@ -38,7 +38,7 @@ async function updateVideo(url) {
 }
 
 async function createMaster(dir, streamsDict, streamName) {
-  fetch(`http://${SERVER_IP}:5000/file/create/master`, {
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/file/create/master`, {
     method: "POST",
     body: JSON.stringify({
       fileName: dir.concat(streamName, ".m3u8"),
@@ -76,7 +76,7 @@ function clearOption() {
 function addOption(text, value) {
   let selects = document.getElementsByClassName("test-select");
   for (let i = 0; i < selects.length; i++) {
-    let newOption = new Option(text, value); 
+    let newOption = new Option(text, value);
     selects[i].appendChild(newOption);
   }
 }
@@ -96,7 +96,7 @@ function removeData(chart) {
 }
 
 function getStreamNames() {
-  fetch(`http://${SERVER_IP}:5000/playfab/stream/get/names`)
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/playfab/stream/get/names`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -116,7 +116,7 @@ function getStreamNames() {
 }
 
 setInterval(() => {
-  fetch(`http://${SERVER_IP}:5000/resources/usage/`)
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/resources/usage/`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -150,7 +150,7 @@ function changeCamera(e) {
 }
 
 setInterval(() => {
-  fetch(`http://${SERVER_IP}:5000/resources/process/status/`)
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/resources/process/status/`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -227,7 +227,7 @@ function updateCommand() {
 function reloadVideo() {
   let tableStreams = tableInfo();
   updateVideo(
-    `http://${SERVER_IP}:5000/file/videos/low/1k`.concat(
+    `http://${SERVER_IP}:${SERVER_PORT}/file/videos/low/1k`.concat(
       tableStreams[1],
       ".m3u8"
     )
@@ -237,7 +237,7 @@ function reloadVideo() {
 async function stitcherStart() {
   let tableStreams = tableInfo();
   clearBucketS3();
-  fetch(`http://${SERVER_IP}:5000/stitcher/start/`, {
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/stitcher/start/`, {
     method: "POST",
     body: JSON.stringify({
       command: tableStreams[0],
@@ -248,14 +248,14 @@ async function stitcherStart() {
   });
   observerStart();
   alert(
-    `http://${SERVER_IP}:5000/file/videos/low/1k`.concat(
+    `http://${SERVER_IP}:${SERVER_PORT}/file/videos/low/1k`.concat(
       tableStreams[1],
       ".m3u8"
     )
   );
 
   updateVideo(
-    `http://${SERVER_IP}:5000/file/videos/low/1k`.concat(
+    `http://${SERVER_IP}:${SERVER_PORT}/file/videos/low/1k`.concat(
       tableStreams[1],
       ".m3u8"
     )
@@ -292,11 +292,11 @@ async function stitcherStart() {
 
 
 async function clearFolder() {
-  fetch(`http://${SERVER_IP}:5000/file/clear/videos`);
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/file/clear/videos`);
 }
 
 async function clearBucketS3() {
-  fetch(`http://${SERVER_IP}:5000/bucket/clear/transmision`, {
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/bucket/clear/transmision`, {
 
     method: "POST",
     body: JSON.stringify({
@@ -309,11 +309,58 @@ async function clearBucketS3() {
 }
 
 async function observerStart() {
-  fetch(`http://${SERVER_IP}:5000/observer/start/`);
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/observer/start/`);
 }
 
+async function backupBucket() {
+  const textLink = document.getElementById("title-backup");
+  const spinner = document.querySelector(".loader");
+  const backupButton = document.getElementById("backup-bucket-button");
+
+  console.log("backupBucket");
+
+  backupButton.disabled = true;
+  spinner.classList.replace("hidden", "block");
+  textLink.classList.replace("flex", "hidden");
+  try {
+    await fetch(`http://${SERVER_IP}:${SERVER_PORT}/bucket/sync/transmision`,{method: "POST"})
+    .then(data => {
+        alert(":)");
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+  } catch (err) {
+    alert(err);
+  } finally {
+    textLink.classList.replace( "hidden","flex");
+    spinner.classList.replace( "block","hidden");
+  }
+}
+
+
+setInterval(() => {
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/resources/process/aws/status/`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('API request failed');
+            }
+        })
+        .then(data => {
+            document.getElementById("aws-status").textContent=data["text"];
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+}, 500);
+
+
 function stitcherStop() {
-  fetch(`http://${SERVER_IP}:5000/stitcher/stop/`, {
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/stitcher/stop/`, {
     method: "POST",
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -322,7 +369,7 @@ function stitcherStop() {
   alert("Y-Y");
 }
 function observerStop() {
-  fetch(`http://${SERVER_IP}:5000/observer/stop/`);
+  fetch(`http://${SERVER_IP}:${SERVER_PORT}/observer/stop/`);
 }
 function updatePath() {
   console.log(template);

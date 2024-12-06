@@ -8,8 +8,12 @@ import shlex
 
 # PC interactions
 import os
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 # Constants
+DEFAULT_BUCKET_LINK = os.getenv("DEFAULT_BUCKET_LINK") 
 PUBLICIDAD = {'active': False, 'output': ''}
 UPLOAD_ADD_FOLDER = './publicidad'
 
@@ -23,7 +27,7 @@ def publicidadStart(command) -> bool:
             for line in process.stdout:
                 PUBLICIDAD["output"] = line[:-1]
                 
-            process = subprocess.Popen(['aws', 's3', 'sync', './publicidad', 's3://vrinsitu-aaron-bucket/publicidad/'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+            process = subprocess.Popen(['aws', 's3', 'sync', f'./{UPLOAD_ADD_FOLDER}', f'{DEFAULT_BUCKET_LINK}/publicidad/'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
             for line in process.stdout:
                 PUBLICIDAD["output"] = line[:-1]
 
@@ -39,7 +43,7 @@ def publicidadStart(command) -> bool:
 
 @publicidad_bp.route("/")
 def publicidad():
-    return render_template("cargarPublicidad.html", SERVER_IP = current_app.config["SERVER_IP"])
+    return render_template("cargarPublicidad.html", SERVER_IP = current_app.config["SERVER_IP"], SERVER_PORT = current_app.config['SERVER_PORT'])
 
 
 @publicidad_bp.route('/upload/', methods=['POST'])

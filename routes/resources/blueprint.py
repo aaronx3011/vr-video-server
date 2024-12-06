@@ -30,3 +30,11 @@ def statusAWS():
     resp = jsonify(active = bucket.AWS["active"], text = bucket.AWS["output"])
     resp.status_code = 200
     return resp 
+
+
+@resources_bp.route("/process/aws/status/download/")
+@cross_origin()
+def statusAWSDownload():
+    resp = jsonify(active = bucket.AWS_DOWNLOAD["active"], text = bucket.AWS_DOWNLOAD["output"])
+    resp.status_code = 200
+    return resp 

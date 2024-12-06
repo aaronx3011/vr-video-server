@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 # Enviroment interactions
+import os
 from dotenv import load_dotenv
 
 # Flask utils
@@ -18,6 +19,7 @@ load_dotenv('.env')
 def createApp():
     app = Flask(__name__)
     app.config['CORS_HEADERS'] = 'Content-Type'
+    app.config['SERVER_PORT'] = os.getenv("SERVER_PORT")
     app.config['SERVER_IP'] = ''
     while True:
         try:
@@ -62,8 +64,8 @@ sio = SocketIO(app)
 
 @app.route("/")
 def videoStream():
-    return render_template("index.html", SERVER_IP = app.config['SERVER_IP'])
+    return render_template("index.html", SERVER_IP = app.config['SERVER_IP'], SERVER_PORT=app.config['SERVER_PORT'])
 
 
 if __name__ == '__main__':
-    sio.run(app, host='0.0.0.0', debug = True, allow_unsafe_werkzeug=True)
+    sio.run(app, host='0.0.0.0', port= app.config['SERVER_PORT'], debug = True, allow_unsafe_werkzeug=True)

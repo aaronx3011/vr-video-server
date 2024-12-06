@@ -88,7 +88,7 @@
                 return;
             }
             let fileName = file.files[0].name;
-            fetch(`http://${SERVER_IP}:5000/publicidad/start/`, {
+            fetch(`http://${SERVER_IP}:${SERVER_PORT}/publicidad/start/`, {
                 method: "POST",
                 body: JSON.stringify({
                     command: "ffmpeg -i ./publicidad/".concat(fileName, " -c:v libx264 ./publicidad/", fileName.substring(0, fileName.lastIndexOf('.')), ".m3u8")
@@ -108,7 +108,7 @@
 
         // Monitorear el estado del procesamiento de FFMPEG
         setInterval(() => {
-            fetch(`http://${SERVER_IP}:5000/publicidad/status/`)
+            fetch(`http://${SERVER_IP}:${SERVER_PORT}/publicidad/status/`)
                 .then(response => {
                     if (response.ok) {
                         return response.json();

@@ -16,12 +16,33 @@
     ">
     <script>
         const SERVER_IP = "{{SERVER_IP}}"
+        const SERVER_PORT = "{{SERVER_PORT}}"
     </script>
     <style>
         input::placeholder {
             font-size: small;
             text-align: start;
             font-weight: 400;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 
@@ -48,17 +69,36 @@
 
                 <button onclick="stitcherStop()"
                     class="secundary-butto w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
-                    <span>stop stitching</span> </button>
+                    <span>Stop stitching</span> </button>
                 <button onclick="observerStop()"
                     class="secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
-                    <span>stop observer</span> </button>
+                    <span>Stop observer</span> </button>
                 <button onclick="clearBucketS3()"
                     class="secundary-button  w-full border-2  border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
-                    <span>clear Bucket</span> </button>
+                    <span>Clear Bucket</span> </button>
                 <button onclick="clearFolder()"
                     class="secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
-                    <span>clear Folder</span> </button>
+                    <span>Clear Folder</span> </button>
 
+                <a href="http://{{SERVER_IP}}:${SERVER_PORT}/file/upload/"
+                        class="text-center secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
+                        <span>Upload Banner</span>
+                </a>
+                
+
+                <a href="http://{{SERVER_IP}}:${SERVER_PORT}/publicidad/"
+                        class="text-center secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
+                        <span>Upload Advertising</span>
+                </a>
+
+                <button onclick="backupBucket()" id="backup-bucket-button"
+                    class="secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded flex gap-5 justify-center">
+                    <span id="title-backup" class="flex">Backup Bucket</span>  <span class="hidden loader w-5 h-5" ></span></button>
+
+                <a href="http://{{SERVER_IP}}:${SERVER_PORT}/bucket/download/transmision/"
+                        class="text-center secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
+                        <span>Downloads Files From Bucket</span>
+                </a>
             </div>
 
 
@@ -168,21 +208,6 @@
                         <span>start</span> </button>
                 </div>
                 <div class="w-full flex flex-row gap-7">
-                    <!-- <button onclick="stitcherStart()"
-                        class="main-button w-full hover:bg-blue-700 bg-blue-600  transition duration-300 ease-in-out p-2 rounded">
-                        <span>start</span> </button>
-                    <button onclick="stitcherStop()"
-                        class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
-                        <span>stop stitching</span> </button>
-                    <button onclick="observerStop()"
-                        class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
-                        <span>stop observer</span> </button>
-                    <button onclick="clearBucketS3()"
-                        class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
-                        <span>clear Bucket</span> </button>
-                    <button onclick="clearFolder()"
-                        class="secundary-button w-full hover:bg-blue-600 bg-blue-500 transition duration-300 ease-in-out p-2 rounded">
-                        <span>clear Folder</span> </button> -->
                 </div>
 
 
@@ -197,7 +222,7 @@
                     <div class="  mx-auto w-full">
                         <video id="my-video" class="video-js vjs-big-play-centered vjs-theme-sea" controls loop autoplay
                             preload="auto" fluid="true" poster="" data-setup='{}'>
-                            <source id="video-source" src="http://192.168.88.9:5000/file/preview/previewplaylist.m3u8"
+                            <source id="video-source" src="http://192.168.88.9:${SERVER_PORT}/file/preview/previewplaylist.m3u8"
                                 type="application/x-mpegURL">
                         </video>
 
@@ -280,6 +305,10 @@
                             <span id="ffmpeg-text"></span>
                             <br>
                             <span id="observer-text"></span>
+                            <hr>
+                            <span>Respaldo:</span>
+                            <br>
+                            <span id="aws-status"></span>
                         </div>
                     </div>
                 </section>

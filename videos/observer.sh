@@ -11,8 +11,9 @@ counter=0;
 function execute() {
     counter=$((counter+1))
     echo "Detected change n. $counter" |
-    aws s3 sync ./videos/ s3://vrinsitu-aaron-bucket/transmision/ --exclude "*" --include "*.ts"; 
-    aws s3 sync ./videos/ s3://vrinsitu-aaron-bucket/transmision/ --exclude "*" --include "*.m3u8"
+    echo 
+    aws s3 sync ./videos/ "$DEFAULT_BUCKET_LINK"transmision/ --exclude "*" --include "*.ts"; 
+    aws s3 sync ./videos/ "$DEFAULT_BUCKET_LINK"transmision/ --exclude "*" --include "*.m3u8"
     eval "$@"
 }
 

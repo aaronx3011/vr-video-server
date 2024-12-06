@@ -1,6 +1,10 @@
-import json
+# Plafab
 import playfab
 
+# Utils 
+import json
+
+# PC interactions
 import os
 from dotenv import load_dotenv
 

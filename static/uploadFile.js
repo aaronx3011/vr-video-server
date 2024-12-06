@@ -21,7 +21,7 @@ async function handleFormSubmit(event) {
     })
     .then(response => response.json())
     .then(() => {
-        fetch(`http://${SERVER_IP}:5000/bucket/sync/folder/`,
+        fetch(`http://${SERVER_IP}:${SERVER_PORT}/bucket/sync/folder/`,
             {
                 method: "POST",
                 body: JSON.stringify(
@@ -34,6 +34,7 @@ async function handleFormSubmit(event) {
         )
         .then(response => {
             if (response.ok) {
+                alert("Banners uploaded succesfully");
                 return response.json();
             } else {
                 throw new Error('API request failed');
@@ -117,7 +118,7 @@ function removeImage(index) {
 
 // Monitorear el estado del procesamiento en AWS (opcional)
 setInterval(() => {
-    fetch(`http://${SERVER_IP}:5000/resources/process/aws/status/`)
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/resources/process/aws/status/`)
         .then(response => {
             if (response.ok) {
                 return response.json();
