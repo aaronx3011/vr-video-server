@@ -178,7 +178,7 @@ function tableInfo() {
   filterText =
     " gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/".concat(
       templateName,
-      " ! video/x-raw(memory:GLMemory),format=RGBA,width=7680,height=4320 ! tee name=t t. ! queue ! nvh265enc preset=1 ! h265parse ! queue ! mux. alsasrc device=hw:0 ! queue ! audioconvert ! audioresample ! audio/x-raw,rate=48000,channels=2,width=16 ! avenc_aac ! aacparse ! tee name=at at. ! queue ! mpegtsmux name=mux ! hlssink target-duration=15 location=videos/high/8k",
+      " ! video/x-raw(memory:GLMemory),format=RGBA,width=7680,height=4320 ! tee name=t t. ! queue ! nvh265enc preset=1 ! h265parse ! queue ! mux. alsasrc device=hw:1 ! queue ! audioconvert ! audioresample ! audio/x-raw,rate=48000,channels=2,width=16 ! avenc_aac ! aacparse ! tee name=at at. ! queue ! mpegtsmux name=mux ! hlssink target-duration=15 location=videos/high/8k",
       streamName.options[streamName.selectedIndex].text,
       "%05d.ts playlist-location=videos/high/8k",
       streamName.options[streamName.selectedIndex].text,
@@ -296,6 +296,7 @@ async function clearFolder() {
 }
 
 async function clearBucketS3() {
+  console.log(`http://${SERVER_IP}:${SERVER_PORT}/bucket/clear/transmision`);
   fetch(`http://${SERVER_IP}:${SERVER_PORT}/bucket/clear/transmision`, {
 
     method: "POST",

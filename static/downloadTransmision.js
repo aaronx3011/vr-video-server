@@ -126,5 +126,6 @@ function downloadFilesFromAWS() {
 }
 
 console.log(SERVER_IP)
+console.log(SERVER_PORT)
 
 getDirectoriesInDirectory()

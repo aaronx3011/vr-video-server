@@ -19,7 +19,7 @@ AWS_DOWNLOAD = {"active": False, "output" : ""}
 
 def clearFilesByNameRecursive(folder, fileName):
     try:
-        command = f"aws s3 rm {DEFAULT_BUCKET_LINK}/{folder} --exclude '*' --include '*{fileName}*' --recursive"
+        command = f"aws s3 rm {DEFAULT_BUCKET_LINK}{folder} --exclude '*' --include '*{fileName}*' --recursive"
         subprocess.Popen(
             shlex.split(command),
             stdout=subprocess.PIPE
@@ -29,7 +29,7 @@ def clearFilesByNameRecursive(folder, fileName):
 
 def clearFilesByName(folder, fileName):
     try:
-        command = f"aws s3 rm {DEFAULT_BUCKET_LINK}/{folder} --exclude '*' --include '*{fileName}*'"
+        command = f"aws s3 rm {DEFAULT_BUCKET_LINK}{folder} --exclude '*' --include '*{fileName}*'"
         subprocess.Popen(
             shlex.split(command),
             stdout=subprocess.PIPE
@@ -39,7 +39,7 @@ def clearFilesByName(folder, fileName):
 
 def syncFromLocalFolderToAWS(folder):
     try:
-        command = f"aws s3 sync ./{folder} {DEFAULT_BUCKET_LINK}/{folder}" 
+        command = f"aws s3 sync ./{folder} {DEFAULT_BUCKET_LINK}{folder}" 
         process = subprocess.Popen(
             shlex.split(command),
             stdout=subprocess.PIPE
@@ -53,7 +53,7 @@ def syncFromAWSFolderToAWS(folder):
     try:
         if AWS['active'] == False:
             AWS['active'] == True
-            command = f"aws s3 sync {DEFAULT_BUCKET_LINK}/{folder} {DEFAULT_BUCKET_LINK}/{folder}{time.time()}" 
+            command = f"aws s3 sync {DEFAULT_BUCKET_LINK}{folder} {DEFAULT_BUCKET_LINK}{folder}{time.time()}" 
             process = subprocess.Popen(
                 shlex.split(command),
                 stdout=subprocess.PIPE,

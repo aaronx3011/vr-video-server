@@ -64,7 +64,7 @@ sio = SocketIO(app)
 
 @app.route("/")
 def videoStream():
-    return render_template("index.html", SERVER_IP = app.config['SERVER_IP'], SERVER_PORT=app.config['SERVER_PORT'])
+    return render_template("index.html", SERVER_PORT=app.config['SERVER_PORT'], SERVER_IP = app.config['SERVER_IP'] )
 
 
 if __name__ == '__main__':

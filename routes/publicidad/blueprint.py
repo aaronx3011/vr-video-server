@@ -27,7 +27,7 @@ def publicidadStart(command) -> bool:
             for line in process.stdout:
                 PUBLICIDAD["output"] = line[:-1]
                 
-            process = subprocess.Popen(['aws', 's3', 'sync', f'./{UPLOAD_ADD_FOLDER}', f'{DEFAULT_BUCKET_LINK}/publicidad/'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+            process = subprocess.Popen(['aws', 's3', 'sync', f'./{UPLOAD_ADD_FOLDER}', f'{DEFAULT_BUCKET_LINK}publicidad/low/'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
             for line in process.stdout:
                 PUBLICIDAD["output"] = line[:-1]
 
