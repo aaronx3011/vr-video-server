@@ -15,7 +15,7 @@
 
     ">
     <script>
-        const SERVER_PORT = "5000"
+        const SERVER_PORT = "{{SERVER_PORT}}"
         const SERVER_IP = "{{SERVER_IP}}"
     </script>
     <style>
@@ -80,13 +80,13 @@
                     class="secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
                     <span>Clear Folder</span> </button>
 
-                <a href="http://{{SERVER_IP}}:${SERVER_PORT}/file/upload/"
+                <a href="http://{{SERVER_IP}}:{{SERVER_PORT}}/file/upload/"
                         class="text-center secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
                         <span>Upload Banner</span>
                 </a>
                 
 
-                <a href="http://{{SERVER_IP}}:${SERVER_PORT}/publicidad/"
+                <a href="http://{{SERVER_IP}}:{{SERVER_PORT}}/publicidad/"
                         class="text-center secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
                         <span>Upload Advertising</span>
                 </a>
@@ -95,12 +95,12 @@
                     class="secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded flex gap-5 justify-center">
                     <span id="title-backup" class="flex">Backup Bucket</span>  <span class="hidden loader w-5 h-5" ></span></button>
 
-                <a href="http://{{SERVER_IP}}:${SERVER_PORT}/bucket/download/transmision/"
+                <a href="http://{{SERVER_IP}}:{{SERVER_PORT}}/bucket/download/transmision/"
                         class="text-center secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
                         <span>Downloads Files From Bucket</span>
                 </a>
 
-                <a href="http://{{SERVER_IP}}:${SERVER_PORT}/calibration/"
+                <a href="http://{{SERVER_IP}}:{{SERVER_PORT}}/calibration/"
                         class="text-center secundary-button w-full border-2 border-white/60 hover:bg-white/50 transition duration-300 ease-in-out p-1 rounded">
                         <span>Camera Calibration</span>
                 </a>
@@ -227,7 +227,7 @@
                     <div class="  mx-auto w-full">
                         <video id="my-video" class="video-js vjs-big-play-centered vjs-theme-sea" controls loop autoplay
                             preload="auto" fluid="true" poster="" data-setup='{}'>
-                            <source id="video-source" src="http://192.168.88.9:${SERVER_PORT}/file/preview/previewplaylist.m3u8"
+                            <source id="video-source" src="http://192.168.88.9:{{SERVER_PORT}}/file/preview/previewplaylist.m3u8"
                                 type="application/x-mpegURL">
                         </video>
 
