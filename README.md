@@ -86,9 +86,13 @@ To run this project, you will need to add the following environment variables to
 
 - **AWS:** `AWS_ACCESS_KEY_ID` `AWS_SECRET_ACCESS_KEY` `AWS_REGION` `DEFAULT_BUCKET_NAME` `DEFAULT_BUCKET_LINK`
 
-- **FOLDERS** `DEFAULT_DOWNLOAD_FOLDER`
+- **FOLDERS** `DEFAULT_DOWNLOAD_FOLDER` `DEFAULT_CALIBRATION_FOLDER`
 
 - **PLAYFAB:** `TitleId` `DeveloperSecretKey` `ACCOUNT_LINK_ID`
+
+- **SERVER:** `SERVER_PORT`
+
+- **UTILS:** `GST_DEBUG_DUMP_DOR_DIR`
 
 
 ## Author

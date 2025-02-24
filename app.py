@@ -55,6 +55,9 @@ def createApp():
     from routes.stitcher import blueprint
     app.register_blueprint(blueprint.stitcher_bp)
 
+    from routes.calibration import blueprint
+    app.register_blueprint(blueprint.calibration_bp)
+
     return app
 
 app = createApp()
