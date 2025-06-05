@@ -138,12 +138,17 @@
                             class="px-4 py-2 hover:bg-blue-700 bg-blue-600 text-white rounded  transition duration-300 ease-in-out cursor-pointer w-full">
                     </form>
                     <div class="flex flex-col gap-2 mt-4">
-
                         <label for="stream-name" class="text-sm">Stream name</label>
                         <select id="stream-name"
-                            class="test-select p-2 w-full bg-transparent border border-gray-200 text-white rounded"></select>
-
+                            class="stream-select p-2 w-full bg-transparent border border-gray-200 text-white rounded"></select>
                     </div>
+
+                    <div class="flex flex-col gap-2 mt-4">
+                        <label for="alsa-device" class="text-sm">Alsa Device</label>
+                        <select id="alsa-device"
+                            class="alsa-record-devices p-2 w-full bg-transparent border border-gray-200 text-white rounded"></select>
+                    </div>
+
                 </div>
 
                 <div id="list-server" class="flex flex-col gap-3">
@@ -153,60 +158,99 @@
                         <input onchange="updateCommand()" type="checkbox">
 
                         <input
-                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
                             placeholder="camera url 8" onchange="updateCommand()" type="text">
+                            <select 
+                                class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                              <option value="264">h264</option>
+                              <option value="265">h265</option>
+                            </select>
                     </div>
 
                     <div class="flex flex-row gap-4">
 
                         <input onchange="updateCommand()" type="checkbox">
                         <input
-                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
                             placeholder="camera url 7" onchange="updateCommand()" type="text">
+                            <select 
+                                class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                              <option value="264">h264</option>
+                              <option value="265">h265</option>
+                            </select>
                     </div>
                     <div class="flex flex-row gap-4">
 
                         <input onchange="updateCommand()" type="checkbox">
                         <input
-                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal"
                             placeholder="camera url 6" onchange="updateCommand()" type="text">
+                            <select 
+                                class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                              <option value="264">h264</option>
+                              <option value="265">h265</option>
+                            </select>
+
                     </div>
                     <div class="flex flex-row gap-4">
 
                         <input onchange="updateCommand()" type="checkbox">
                         <input
-                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
                             placeholder="camera url 5" onchange="updateCommand()" type="text">
+                            <select 
+                                class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                              <option value="264">h264</option>
+                              <option value="265">h265</option>
+                            </select>
                     </div>
                     <div class="flex flex-row gap-4">
 
                         <input onchange="updateCommand()" type="checkbox">
                         <input
-                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
                             placeholder="camera url 4" onchange="updateCommand()" type="text">
+                            <select 
+                                class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                              <option value="264">h264</option>
+                              <option value="265">h265</option>
+                            </select>
                     </div>
                     <div class="flex flex-row gap-4">
 
                         <input onchange="updateCommand()" type="checkbox">
                         <input
-                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
                             placeholder="camera url 3" onchange="updateCommand()" type="text">
+                            <select 
+                                class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                              <option value="264">h264</option>
+                              <option value="265">h265</option>
+                            </select>
                     </div>
                     <div class="flex flex-row gap-4">
 
                         <input onchange="updateCommand()" type="checkbox">
                         <input
-                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
                             placeholder="camera url 2" onchange="updateCommand()" type="text">
+                            <select 
+                                class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                              <option value="264">h264</option>
+                              <option value="265">h265</option>
+                            </select>
                     </div>
                     <div class="flex flex-row gap-4">
 
                         <input onchange="updateCommand()" type="checkbox">
                         <input
-                            class="w-full bg-transparent border border-2 rounded-2xl p-[5px] pl-4 text-sm font-normal "
+                            class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
                             placeholder="camera url 1" onchange="updateCommand()" type="text">
-
-
+                            <select 
+                                class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                              <option value="264">h264</option>
+                              <option value="265">h265</option>
+                            </select>
                     </div>
                     <button onclick="stitcherStart()"
                         class="px-4 py-2 hover:bg-blue-700 bg-blue-600 text-white rounded  transition duration-300 ease-in-out cursor-pointer w-full">

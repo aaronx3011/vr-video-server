@@ -1,6 +1,5 @@
 # Flask utils
-from flask import Blueprint, jsonify, request, render_template
-from werkzeug.utils import secure_filename
+from flask import Blueprint, jsonify
 
 # Own modules
 from routes.playfab import playfabConnector
@@ -23,7 +22,9 @@ def turnOffStreams(tag):
 
 @playfab_bp.route("/stream/get/names")
 def get_names():
-    return playfabConnector.GetItems()
+    test = playfabConnector.GetItems() 
+    print(test)
+    return test
 
 
 @playfab_bp.route("/stream/<string:tag>/on/")

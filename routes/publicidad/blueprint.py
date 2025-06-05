@@ -64,6 +64,7 @@ def uploadAdd():
 @publicidad_bp.route("/start/", methods = ["POST"])
 def startPublicidad():
     data = request.get_json()
+    print(data["command"])
     if publicidadStart(data["command"]):
         resp = jsonify(success= True)
         resp.status_code = 200

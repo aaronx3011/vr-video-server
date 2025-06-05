@@ -21,14 +21,19 @@ def createApp():
     app.config['CORS_HEADERS'] = 'Content-Type'
     app.config['SERVER_PORT'] = os.getenv("SERVER_PORT")
     app.config['SERVER_IP'] = ''
-    while True:
-        try:
-            app.config['SERVER_IP'] = net.getLocalIPv4()
-        except:
-            pass
-        finally:
-            if app.config['SERVER_IP'] !='':
-                break
+    app.config['DEBUG'] = os.getenv("DEBUG")
+
+    if app.config['DEBUG'] == True:
+        app.config['SERVER_IP'] = os.getenv("SERVER_IP")
+    else:
+        while True:
+            try:
+                app.config['SERVER_IP'] = net.getLocalIPv4()
+            except:
+                pass
+            finally:
+                if app.config['SERVER_IP'] !='':
+                    break
 
 
     from routes.publicidad import blueprint
@@ -57,6 +62,9 @@ def createApp():
 
     from routes.calibration import blueprint
     app.register_blueprint(blueprint.calibration_bp)
+
+    from routes.audio import blueprint
+    app.register_blueprint(blueprint.audio_bp)
 
     return app
 

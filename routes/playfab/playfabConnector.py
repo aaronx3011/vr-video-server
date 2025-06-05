@@ -17,7 +17,7 @@ playfab.PlayFabSettings.DeveloperSecretKey = os.getenv("DeveloperSecretKey")
 ACCOUNT_LINK_ID = os.getenv("ACCOUNT_LINK_ID")
 
 
-StreamsDispnibles = {
+StreamsDisponibles = {
         "Catalog": [],
         "Inventory": []
     }
@@ -31,20 +31,19 @@ def callback(success, failure):
  
 
 def callback2(success, failure):
-    
     if success:
-        visibleItems = [ItemId["ItemId"] for ItemId in StreamsDispnibles["Inventory"]]
+        visibleItems = [ItemId["ItemId"] for ItemId in StreamsDisponibles["Inventory"]]
         for item in success["Catalog"]:
             if item["ItemId"] in visibleItems:
-                StreamsDispnibles["Catalog"].append(item)
+                StreamsDisponibles["Catalog"].append(item)
     else:
         print(failure)
 
 
 def inventoryCallback(success, failure):
-    
+
     if success:
-        StreamsDispnibles["Inventory"] = success["Inventory"]
+        StreamsDisponibles["Inventory"] = success["Inventory"]
     else:
         print(failure)
 
@@ -56,13 +55,19 @@ loginRequest = {
 def getInventory():
     login = playfab.PlayFabClientAPI.LoginWithCustomID(loginRequest, callback)
     result = playfab.PlayFabClientAPI.GetUserInventory(loginRequest, inventoryCallback)
-    return json.dumps(StreamsDispnibles["Inventory"])
+    return json.dumps(StreamsDisponibles["Inventory"])
 
 
 def GetItems():
+
+    global StreamsDisponibles
+    StreamsDisponibles = {
+            "Catalog": [],
+            "Inventory": []
+        }
     getInventory()
     result = playfab.PlayFabClientAPI.GetCatalogItems({},callback2)
-    return json.dumps(StreamsDispnibles["Catalog"])
+    return json.dumps(StreamsDisponibles["Catalog"])
 
 
 

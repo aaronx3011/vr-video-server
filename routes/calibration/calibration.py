@@ -22,7 +22,7 @@ def captureFirstFrame(inputs) -> str:
     try:
         for input in inputs:
             inputsText += f"-i {input} "
-            mapsText += f"-map {inputCounter}:v -frames:v 1 -{CALIBRATION_FOLDER}{inputCounter}-{nameSuffix}.jpg "
+            mapsText += f"-map {inputCounter}:v -frames:v 1 {CALIBRATION_FOLDER}{inputCounter}-{nameSuffix}.jpg "
             inputCounter += 1
 
         finalCommand += inputsText + mapsText

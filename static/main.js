@@ -1,8 +1,8 @@
 const dataTable = document.getElementById("main-table");
 
 const $listServer = document
-  .getElementById("list-server")
-  .querySelectorAll("div");
+    .getElementById("list-server")
+    .querySelectorAll("div");
 
 const $cameras = document.querySelectorAll(".cam");
 const command = document.getElementById("command-span");
@@ -19,325 +19,313 @@ const $buttonNav = document.getElementById("openNav");
 let isOpen = false;
 $buttonNav.addEventListener("click", (e) => {
 
-  console.log("console.log()")
+    console.log("console.log()")
 
-  $navbar.classList.toggle("h-[80px]")
-  isOpen = false;
+    $navbar.classList.toggle("h-[80px]")
+    isOpen = false;
 
 
 })
 
 async function updateVideo(url) {
-  console.log("antes");
-  await delay(10000);
-  console.log("despues");
-  console.log(player);
-  player.src(url);
-  player.load();
-  player.play();
+    console.log("antes");
+    await delay(10000);
+    console.log("despues");
+    console.log(player);
+    player.src(url);
+    player.load();
+    player.play();
 }
 
 async function createMaster(dir, streamsDict, streamName) {
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/file/create/master`, {
-    method: "POST",
-    body: JSON.stringify({
-      fileName: dir.concat(streamName, ".m3u8"),
-      streams: streamsDict,
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/file/create/master`, {
+        method: "POST",
+        body: JSON.stringify({
+            fileName: dir.concat(streamName, ".m3u8"),
+            streams: streamsDict,
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+        },
+    });
 }
 
 window.onload = () => {
 
-  $cameras.forEach((el) => {
-    const id = el.id;
-    const path = window.location.pathname;
+    $cameras.forEach((el) => {
+        const id = el.id;
+        const path = window.location.pathname;
 
-    if (String(path).includes(id)) {
-      el.classList.replace("bg-white/0", "bg-white/30");
-    } else {
-      el.classList.replace("bg-white/30", "bg-white/0");
-    }
-  });
+        if (String(path).includes(id)) {
+            el.classList.replace("bg-white/0", "bg-white/30");
+        } else {
+            el.classList.replace("bg-white/30", "bg-white/0");
+        }
+    });
 };
-function clearOption() {
-  console.log("clear");
-  let selects = document.getElementsByClassName("test-select");
-  console.log(selects);
-  for (let i = 0; i < selects.length; i++) {
-    console.log(selects[i].childElementCount);
-  }
+function clearOption(className) {
+    console.log("clear");
+    let selects = document.getElementsByClassName(className);
+    console.log(selects);
+    for (let i = 0; i < selects.length; i++) {
+        console.log(selects[i].childElementCount);
+    }
 
 }
 
-function addOption(text, value) {
-  let selects = document.getElementsByClassName("test-select");
-  for (let i = 0; i < selects.length; i++) {
-    let newOption = new Option(text, value);
-    selects[i].appendChild(newOption);
-  }
+function addOption(className, text, value) {
+    let selects = document.getElementsByClassName(className);
+    for (let i = 0; i < selects.length; i++) {
+        let newOption = new Option(text, value);
+        selects[i].appendChild(newOption);
+    }
 }
 
 function addData(chart, newData) {
-  chart.data.datasets.forEach((dataset) => {
-    dataset.data.push(newData);
-  });
-  chart.update();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(newData);
+    });
+    chart.update();
 }
 
 function removeData(chart) {
-  chart.data.datasets.forEach((dataset) => {
-    dataset.data.shift();
-  });
-  chart.update();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.shift();
+    });
+    chart.update();
 }
 
 function getStreamNames() {
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/playfab/stream/get/names`)
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("API request failed");
-      }
-    })
-    .then((data) => {
-      clearOption();
-      for (i in data) {
-        for (tag in data[i].Tags) {
-
-          addOption(data[i]["Tags"][tag], data[i]["ItemId"]);
-        }
-      }
-    });
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/playfab/stream/get/names`)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("API request failed");
+            }
+        })
+        .then((data) => {
+            clearOption("stream-select");
+            for (i in data) {
+                for (tag in data[i].Tags) {
+                    addOption("stream-select", data[i]["Tags"][tag], data[i]["ItemId"]);
+                }
+            }
+        });
 }
 
+function getAlsaDevices() {
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/audio/record/devices/`)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("API request failed");
+            }
+        })
+        .then((data) => {
+            clearOption("stream-select");
+            for (i=0; i< data.length; i++) {
+                addOption("alsa-record-devices", data[i]["name"], data[i]["index"]);
+            }
+        });
+}
 setInterval(() => {
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/resources/usage/`)
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("API request failed");
-      }
-    })
-    .then((data) => {
-      document.getElementById("cpu").textContent = data["utilization.cpu [%]"];
-      document.getElementById("ram").textContent = data["utilization.ram [%]"];
-      document.getElementById("gpu").textContent = data["utilization.gpu [%]"];
-      document.getElementById("encoder").textContent = data["utilization.encoder [%]"];
-      document.getElementById("decoder").textContent = data["utilization.decoder [%]"];
-      document.getElementById("vram").textContent = data["utilization.memory [%]"];
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/resources/usage/`)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("API request failed");
+            }
+        })
+        .then((data) => {
+            document.getElementById("cpu").textContent = data["utilization.cpu [%]"];
+            document.getElementById("ram").textContent = data["utilization.ram [%]"];
+            document.getElementById("gpu").textContent = data["utilization.gpu [%]"];
+            document.getElementById("encoder").textContent = data["utilization.encoder [%]"];
+            document.getElementById("decoder").textContent = data["utilization.decoder [%]"];
+            document.getElementById("vram").textContent = data["utilization.memory [%]"];
 
-      if (i > 30) {
-        removeData(chart);
-        i--;
-      }
+            if (i > 30) {
+                removeData(chart);
+                i--;
+            }
 
-      i++;
-      addData(chart, Number(data["utilization.gpu [%]"]));
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+            i++;
+            addData(chart, Number(data["utilization.gpu [%]"]));
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 }, 500);
 
 function changeCamera(e) {
-  window.location.href = `/stream/${e}`;
+    window.location.href = `/stream/${e}`;
 }
 
 setInterval(() => {
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/resources/process/status/`)
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("API request failed");
-      }
-    })
-    .then((data) => {
-      document.getElementById("ffmpeg-text").textContent = data["text"];
-      document.getElementById("observer-text").textContent = data["observerText"];
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/resources/process/status/`)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("API request failed");
+            }
+        })
+        .then((data) => {
+            document.getElementById("ffmpeg-text").textContent = data["text"];
+            document.getElementById("observer-text").textContent = data["observerText"];
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 }, 100);
 
 function tableInfo() {
-  let streamName = document.getElementById("stream-name");
-  let template = document.getElementById("template-input");
-  let templateName = template.files[0].name;
-  console.log(template);
-  console.log(templateName);
-  counter = 0;
-  inputsText = "";
-  filterText =
-    " gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/".concat(
-      templateName,
-      " ! video/x-raw(memory:GLMemory),format=RGBA,width=7680,height=4320 ! tee name=t t. ! queue ! nvh265enc preset=1 ! h265parse ! queue ! mux. alsasrc device=hw:1 ! queue ! audioconvert ! audioresample ! audio/x-raw,rate=48000,channels=2,width=16 ! avenc_aac ! aacparse ! tee name=at at. ! queue ! mpegtsmux name=mux ! hlssink target-duration=15 location=videos/high/8k",
-      streamName.options[streamName.selectedIndex].text,
-      "%05d.ts playlist-location=videos/high/8k",
-      streamName.options[streamName.selectedIndex].text,
-      ".m3u8 t.",
-      " ! queue ! glcolorscale ! video/x-raw(memory:GLMemory),width=3840,height=2160 ! nvh265enc preset=1 ! h265parse ! mux1. at. ! queue ! mpegtsmux name=mux1 ! hlssink target-duration=15 location=videos/high/4k",
-      streamName.options[streamName.selectedIndex].text,
-      "%05d.ts playlist-location=videos/high/4k",
-      streamName.options[streamName.selectedIndex].text,
-      ".m3u8 t.",
-      " ! queue ! glcolorscale ! video/x-raw(memory:GLMemory),width=2560,height=1440 ! nvh264enc preset=1 ! h264parse ! mux2. at. ! queue ! mpegtsmux name=mux2 ! hlssink target-duration=15 location=videos/low/2k",
-      streamName.options[streamName.selectedIndex].text,
-      "%05d.ts playlist-location=videos/low/2k",
-      streamName.options[streamName.selectedIndex].text,
-      ".m3u8 t.",
-      " ! queue ! glcolorscale ! video/x-raw(memory:GLMemory),width=1920,height=1080 ! nvh264enc preset=1 ! h264parse ! mux3. at. ! queue ! mpegtsmux name=mux3 ! hlssink target-duration=15 location=videos/low/1k",
-      streamName.options[streamName.selectedIndex].text,
-      "%05d.ts playlist-location=videos/low/1k",
-      streamName.options[streamName.selectedIndex].text,
-      ".m3u8"
-    );
-  outputsText = "";
-  let streamsToActivate = streamName.options[streamName.selectedIndex].text;
+    let streamName = document.getElementById("stream-name").options[document.getElementById("stream-name").selectedIndex].text;
+    let template = document.getElementById("template-input");
+    let templateName = template.files[0].name;
+    let audioDevice = document.querySelector("#alsa-device").value;
+    let cameras = [];
 
-  $listServer.forEach((el) => {
-    const isActive = el.querySelector("input[type=checkbox]").checked;
-    const cameraURL = el.querySelector("input[type=text]").value;
-    if (isActive) {
-      inputsText = inputsText.concat(
-        "rtmpsrc location=",
-        cameraURL,
-        " ! flvdemux ! h264parse ! nvh264dec ! video/x-raw(memory:GLMemory),format=NV12,width=3840,height=2160 ! glcolorconvert ! video/x-raw(memory:GLMemory),format=RGBA,width=3840,height=2160 ! mix. "
-      );
-    }
-  });
+    console.log(templateName);
+    $listServer.forEach((el) => {
+        const isActive = el.querySelector("input[type=checkbox]").checked;
+        if (isActive == true) {
+            const cameraURL = el.querySelector("input[type=text]").value;
+            const codecSelected = el.querySelector("select").value;
+            cameras.push({cameraLink: cameraURL, codec: codecSelected});
+        }
 
-  return [
-    "gst-launch-1.0 -e ".concat(inputsText, filterText),
-    streamsToActivate,
-  ];
+    });
+
+    return {cameras: cameras, templateName: templateName, streamName: streamName, audioDevice: audioDevice};
 }
 
 function updateCommand() {
-  console.log(tableInfo()[0]);
+    console.log(tableInfo());
 }
 
 function reloadVideo() {
-  let tableStreams = tableInfo();
-  updateVideo(
-    `http://${SERVER_IP}:${SERVER_PORT}/file/videos/low/1k`.concat(
-      tableStreams[1],
-      ".m3u8"
-    )
-  );
+    let tableStreams = tableInfo();
+    updateVideo(
+        `http://${SERVER_IP}:${SERVER_PORT}/file/videos/low/1k`.concat(
+            tableStreams.streamName,
+            ".m3u8"
+        )
+    );
 }
 
 async function stitcherStart() {
-  let tableStreams = tableInfo();
-  clearBucketS3();
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/stitcher/start/`, {
-    method: "POST",
-    body: JSON.stringify({
-      command: tableStreams[0],
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
-  observerStart();
-  alert(
-    `http://${SERVER_IP}:${SERVER_PORT}/file/videos/low/1k`.concat(
-      tableStreams[1],
-      ".m3u8"
-    )
-  );
+    let tableStreams = tableInfo();
+    clearBucketS3();
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/stitcher/start/`, {
+        method: "POST",
+        body: JSON.stringify({
+            streamConfiguration: tableStreams,
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+        },
+    }). then((response) => {
+        if (response.ok) return response.json();
+        else throw new Error("API request failed");
+    }).then((data)=> {
+        console.log(data);
+    });
+    observerStart();
+    alert(
+        `http://${SERVER_IP}:${SERVER_PORT}/file/videos/low/1k`.concat(
+            tableStreams.streamName,
+            ".m3u8"
+        )
+    );
 
-  updateVideo(
-    `http://${SERVER_IP}:${SERVER_PORT}/file/videos/low/1k`.concat(
-      tableStreams[1],
-      ".m3u8"
-    )
-  );
-  createMaster(
-    "low/",
-    [
-      {
-        bandwidth: 20000000,
-        stream: "2k".concat(tableStreams[1], ".m3u8"),
-      },
-      {
-        bandwidth: 10000000,
-        stream: "1k".concat(tableStreams[1], ".m3u8"),
-      },
-    ],
-    tableStreams[1]
-  );
-  createMaster(
-    "high/",
-    [
-      {
-        bandwidth: 45000000,
-        stream: "8k".concat(tableStreams[1], ".m3u8"),
-      },
-      {
-        bandwidth: 25000000,
-        stream: "4k".concat(tableStreams[1], ".m3u8"),
-      },
-    ],
-    tableStreams[1]
-  );
+    updateVideo(
+        `http://${SERVER_IP}:${SERVER_PORT}/file/videos/low/1k`.concat(
+            tableStreams.streamName,
+            ".m3u8"
+        )
+    );
+    createMaster(
+        "low/",
+        [
+            {
+                bandwidth: 20000000,
+                stream: "2k".concat(tableStreams.streamName, ".m3u8"),
+            },
+            {
+                bandwidth: 10000000,
+                stream: "1k".concat(tableStreams.streamName, ".m3u8"),
+            },
+        ],
+        tableStreams[1]
+    );
+    createMaster(
+        "high/",
+        [
+            {
+                bandwidth: 45000000,
+                stream: "8k".concat(tableStreams.streamName, ".m3u8"),
+            },
+            {
+                bandwidth: 25000000,
+                stream: "4k".concat(tableStreams.streamName, ".m3u8"),
+            },
+        ],
+        tableStreams.streamName
+    );
 }
 
 
 async function clearFolder() {
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/file/clear/videos`);
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/file/clear/videos`);
 }
 
 async function clearBucketS3() {
-  console.log(`http://${SERVER_IP}:${SERVER_PORT}/bucket/clear/transmision`);
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/bucket/clear/transmision`, {
+    console.log(`http://${SERVER_IP}:${SERVER_PORT}/bucket/clear/transmision`);
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/bucket/clear/transmision`, {
 
-    method: "POST",
-    body: JSON.stringify({
-      fileName: document.getElementById("stream-name").options[document.getElementById("stream-name").selectedIndex].text,
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+        method: "POST",
+        body: JSON.stringify({
+            fileName: document.getElementById("stream-name").options[document.getElementById("stream-name").selectedIndex].text,
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+        },
+    });
 }
 
 async function observerStart() {
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/observer/start/`);
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/observer/start/`);
 }
 
 async function backupBucket() {
-  const textLink = document.getElementById("title-backup");
-  const spinner = document.querySelector(".loader");
-  const backupButton = document.getElementById("backup-bucket-button");
+    const textLink = document.getElementById("title-backup");
+    const spinner = document.querySelector(".loader");
+    const backupButton = document.getElementById("backup-bucket-button");
 
-  console.log("backupBucket");
+    console.log("backupBucket");
 
-  backupButton.disabled = true;
-  spinner.classList.replace("hidden", "block");
-  textLink.classList.replace("flex", "hidden");
-  try {
-    await fetch(`http://${SERVER_IP}:${SERVER_PORT}/bucket/sync/transmision`,{method: "POST"})
-    .then(data => {
-        alert(":)");
-    })
+    backupButton.disabled = true;
+    spinner.classList.replace("hidden", "block");
+    textLink.classList.replace("flex", "hidden");
+    try {
+        await fetch(`http://${SERVER_IP}:${SERVER_PORT}/bucket/sync/transmision`,{method: "POST"})
+            .then(data => {
+                alert(":)");
+            })
     .catch(error => {
         console.log(error);
     });
 
-  } catch (err) {
-    alert(err);
-  } finally {
-    textLink.classList.replace( "hidden","flex");
-    spinner.classList.replace( "block","hidden");
-  }
+    } catch (err) {
+        alert(err);
+    } finally {
+        textLink.classList.replace( "hidden","flex");
+        spinner.classList.replace( "block","hidden");
+    }
 }
 
 
@@ -361,19 +349,20 @@ setInterval(() => {
 
 
 function stitcherStop() {
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/stitcher/stop/`, {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
-  alert("Y-Y");
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/stitcher/stop/`, {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+        },
+    });
+    alert("Y-Y");
 }
 function observerStop() {
-  fetch(`http://${SERVER_IP}:${SERVER_PORT}/observer/stop/`);
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/observer/stop/`);
 }
 function updatePath() {
-  console.log(template);
+    console.log(template);
 }
 
 getStreamNames();
+getAlsaDevices();
