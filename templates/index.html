@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}"> -->
     <!-- <link rel="stylesheet" type="text/css" href="../static/styles/styles.css"> -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css
@@ -246,7 +245,7 @@
                         <input
                             class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
                             placeholder="camera url 1" onchange="updateCommand()" type="text">
-                            <select 
+                            <select
                                 class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
                               <option value="264">h264</option>
                               <option value="265">h265</option>
@@ -340,8 +339,62 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="chart-container" class="container-chart  w-full lg:w-[100%]  fill-white text-white ">
-                            <canvas id="myChart" width="500" height="200"></canvas>
+                        <div>
+
+                            <div id="list-server" class="flex flex-col gap-3">
+                                <p>Camaras 2</p>
+                                <div class="flex flex-row gap-4">
+
+                                    <input onchange="updateCommand()" type="checkbox">
+                                    <input
+                                        class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
+                                        placeholder="camera url 4" onchange="updateCommand()" type="text">
+                                        <select 
+                                            class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                                          <option value="264">h264</option>
+                                          <option value="265">h265</option>
+                                        </select>
+                                </div>
+                                <div class="flex flex-row gap-4">
+
+                                    <input onchange="updateCommand()" type="checkbox">
+                                    <input
+                                        class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
+                                        placeholder="camera url 3" onchange="updateCommand()" type="text">
+                                        <select 
+                                            class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                                          <option value="264">h264</option>
+                                          <option value="265">h265</option>
+                                        </select>
+                                </div>
+                                <div class="flex flex-row gap-4">
+
+                                    <input onchange="updateCommand()" type="checkbox">
+                                    <input
+                                        class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
+                                        placeholder="camera url 2" onchange="updateCommand()" type="text">
+                                        <select 
+                                            class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                                          <option value="264">h264</option>
+                                          <option value="265">h265</option>
+                                        </select>
+                                </div>
+                                <div class="flex flex-row gap-4">
+
+                                    <input onchange="updateCommand()" type="checkbox">
+                                    <input
+                                        class="w-full bg-transparent border  rounded p-[5px] pl-4 text-sm font-normal "
+                                        placeholder="camera url 1" onchange="updateCommand()" type="text">
+                                        <select
+                                            class="test-select p-2 w-[25%] bg-transparent border border-gray-200 text-white rounded">
+                                          <option value="264">h264</option>
+                                          <option value="265">h265</option>
+                                        </select>
+                                </div>
+                                <button onclick="stitcherStart()"
+                                    class="px-4 py-2 hover:bg-blue-700 bg-blue-600 text-white rounded  transition duration-300 ease-in-out cursor-pointer w-full">
+                                    <span>start</span> </button>
+                            </div>
                         </div>
 
                     </div>
@@ -376,7 +429,6 @@
             document.getElementById('file-name').textContent = fileName;
         }
     </script>
-    <script src="{{url_for('static', filename='chart.js')}}"></script>
     <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
     <script src="https://unpkg.com/videojs-contribhls/dist/videojs-contrib-hls.js"></script>
     <script>

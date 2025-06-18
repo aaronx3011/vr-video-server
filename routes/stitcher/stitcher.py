@@ -3,6 +3,14 @@ import subprocess
 import shlex
 import threading
 
+
+
+"""
+=================== COMMAND PARAMS ===================
+"""
+
+
+
 SEPARATOR = " ! "
 QUEUE = "queue ! "
 
@@ -19,6 +27,7 @@ STITCHER_PIPE = "gldmdstitcher name=mix client=vrinsitu1 template=stitch-templat
 # STITCHER_PIPE = "gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/TEMPLATE crop-left=-67 crop-right=67 crop-bottom=-20 crop-top=20"
 
 # STITCHER_PIPE = "gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/TEMPLATE"
+
 STITCHER_FORMAT_PIPE = "video/x-raw(memory:GLMemory),format=RGBA,width=7680,height=4320 ! tee name=t t."
 
 COLOR_CONVERT = "glcolorconvert ! video/x-raw(memory:GLMemory),format=COLORFORMAT"
@@ -181,7 +190,15 @@ VIDEO = {'active': False, 'output': ''}
 
 
 """
------------------------- command generation -----------------------
+=================== COMMAND PARAMS END ===================
+"""
+
+
+
+
+
+"""
+------------------------ command generator -----------------------
 """
 
 def stitcherInputPipeGenerator(inputLink)->tuple:
@@ -297,6 +314,10 @@ def stitcherCommandGenerator(
         resolutionIndex += 1
     return commandFinalString
 
+
+"""
+------------------------ command generator end -----------------------
+"""
 
 def stitcherStartCommand(stitcherCommand):
     try:
