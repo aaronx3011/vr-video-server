@@ -1,6 +1,7 @@
 const DEFAULT_CAM_COUNT = 8;
+
 const dataTable = document.getElementById("main-table");
-let render;
+
 // $listServer removed - now handled by tab system
 
 const $cameras = document.querySelectorAll(".cam");
@@ -9,7 +10,6 @@ const videoSource = document.getElementById("video-source");
 const video = document.getElementById("my-video");
 let i = 0;
 let streamsNames = [];
-let alsaDevices = [];
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -64,12 +64,14 @@ window.onload = () => {
     });
 };
 function clearOption(className) {
-    const selects = document.getElementsByClassName(className);
-    Array.from(selects).forEach(sel => {
-        sel.innerHTML = ''; // limpia todas las opciones
-    });
-}
+    console.log("clear");
+    let selects = document.getElementsByClassName(className);
+    console.log(selects);
+    for (let i = 0; i < selects.length; i++) {
+        console.log(selects[i].childElementCount);
+    }
 
+}
 
 function addOption(className, text, value) {
     let selects = document.getElementsByClassName(className);
@@ -93,8 +95,41 @@ function removeData(chart) {
     chart.update();
 }
 
+function getStreamNames() {
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/playfab/stream/get/names`)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("API request failed");
+            }
+        })
+        .then((data) => {
+            clearOption("stream-select");
+            for (i in data) {
+                for (tag in data[i].Tags) {
+                    addOption("stream-select", data[i]["Tags"][tag], data[i]["ItemId"]);
+                }
+            }
+        });
+}
 
-
+function getAlsaDevices() {
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/audio/record/devices/`)
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("API request failed");
+            }
+        })
+        .then((data) => {
+            clearOption("stream-select");
+            for (i=0; i< data.length; i++) {
+                addOption("alsa-record-devices", data[i]["name"], data[i]["index"]);
+            }
+        });
+}
 setInterval(() => {
     fetch(`http://${SERVER_IP}:${SERVER_PORT}/resources/usage/`)
         .then((response) => {
@@ -112,6 +147,13 @@ setInterval(() => {
             document.getElementById("decoder").textContent = data["utilization.decoder [%]"];
             document.getElementById("vram").textContent = data["utilization.memory [%]"];
 
+            if (i > 30) {
+                removeData(chart);
+                i--;
+            }
+
+            i++;
+            addData(chart, Number(data["utilization.gpu [%]"]));
         })
         .catch((error) => {
             console.error(error);
@@ -304,37 +346,11 @@ function updatePath() {
     console.log(template);
 }
 
-function getStreamNames(callback) {
-    fetch(`http://${SERVER_IP}:${SERVER_PORT}/vrseat/streams`)
-        .then((response) => response.json())
-        .then((data) => {
-            streamsNames = (data && data.data && Array.isArray(data.data.cameras))
-                ? data.data.cameras
-                : [];
-          
-            if (typeof callback === 'function') callback();
-        })
-        .catch(console.error);
-}
+getStreamNames();
+getAlsaDevices();
 
-function getAlsaDevices(callback) {
-    fetch(`http://${SERVER_IP}:${SERVER_PORT}/audio/record/devices/`)
-        .then((response) => response.json())
-        .then((data) => {
-            alsaDevices = Array.isArray(data) ? data : [];
-   
-            if (typeof callback === 'function' ) callback();
-        })
-        .catch(console.error);
-}
-
-        
 // --- Lógica de tabs con sincronización de datos, persistencia y compatibilidad con tableInfo() y botón global ---
-/** --- Lógica de tabs con sincronización de datos, persistencia y compatibilidad con tableInfo() y botón global --- */
 (function() {
-
-    
-
     const STORAGE_KEY = 'camera_config_sections_v1';
     const ACTIVE_KEY = 'camera_config_active_tab_v1';
     const tabBar = document.getElementById('tab-bar');
@@ -345,7 +361,7 @@ function getAlsaDevices(callback) {
     function getDefaultSection() {
         return {
             title: 'Stitching',
-            cameras: Array.from({length: DEFAULT_CAM_COUNT}, () => ({ active: false, cameraLink: '', codec: '264' })),
+            cameras: Array.from({length: DEFAULT_CAM_COUNT}, () => ({ active: false, url: '', codec: '264' })),
             streamName: '',
             alsaDevice: '',
             templateName: '',
@@ -356,7 +372,7 @@ function getAlsaDevices(callback) {
     function getCameraSection() {
         return {
             title: 'Cámara',
-            cameras: { cameraLink: '', codec: '264' }, // Una sola cámara
+            camera: { cameraLink: '', codec: '264' }, // Una sola cámara
             streamName: '',
             alsaDevice: '',
             needsStitch: false
@@ -380,7 +396,7 @@ function getAlsaDevices(callback) {
                         ...tab,
                         cameras: (tab.cameras && tab.cameras.length === DEFAULT_CAM_COUNT)
                             ? tab.cameras
-                            : Array.from({length: DEFAULT_CAM_COUNT}, (_, i) => tab.cameras && tab.cameras[i] ? tab.cameras[i] : {active: false, cameraLink: '', codec: '264'})
+                            : Array.from({length: DEFAULT_CAM_COUNT}, (_, i) => tab.cameras && tab.cameras[i] ? tab.cameras[i] : {active: false, url: '', codec: '264'})
                     };
                 } else {
                     // Tabs adicionales son cámaras individuales
@@ -437,7 +453,8 @@ function getAlsaDevices(callback) {
         
         // Render tab bar
         tabBar.innerHTML = '';
-            // Primer tab fijo - Stitching (siempre presente)
+        
+        // Primer tab fijo - Stitching (siempre presente)
         const tabStitching = document.createElement('div');
         tabStitching.className = 'flex items-center gap-1';
         const labelStitching = document.createElement('span');
@@ -469,13 +486,13 @@ function getAlsaDevices(callback) {
             });
             
             // Cambiar de tab
-            titleInput.addEventListener('focus', () => {
+            titleInput.addEventListener('focus', e => {
                 if (activeIdx !== realIdx) {
                     saveActive(realIdx);
                     render();
                 }
             });
-            titleInput.addEventListener('click', () => {
+            titleInput.addEventListener('click', e => {
                 if (activeIdx !== realIdx) {
                     saveActive(realIdx);
                     render();
@@ -508,7 +525,6 @@ function getAlsaDevices(callback) {
             }
             tabBar.appendChild(tab);
         }
-
         // Botón +
         const addBtn = document.createElement('button');
         addBtn.textContent = '+';
@@ -525,68 +541,15 @@ function getAlsaDevices(callback) {
         // Render solo la sección activa
         tabContent.innerHTML = '';
         const tabData = activeIdx === 0 ? state[0] : state[activeIdx - 1];
-
-        // Usa el template correcto
-        let node;
-        if (activeIdx === 0) {
-            node = document.getElementById('stitching-section-template').content.cloneNode(true);
-        } else {
-            node = document.getElementById('camera-section-template').content.cloneNode(true);
+        const node = sectionTemplate.content.cloneNode(true);
+        
+        // IDs solo para el tab activo
+        if (activeIdx !== 0) {
+            node.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
         }
-
-        tabContent.appendChild(node);
-
-        // STREAM NAME CHECKBOXES
-const streamNameList = tabContent.querySelector('.stream-name-checkbox-list');
-streamNameList.innerHTML = '';
-if (Array.isArray(streamsNames) && streamsNames.length > 0) {
-    streamsNames.forEach(name => {
-        const label = document.createElement('label');
-        label.className = 'flex items-center gap-2 mb-1 cursor-pointer';
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = name;
-        checkbox.checked = tabData.streamName === name;
-        checkbox.addEventListener('change', e => {
-            if (e.target.checked) {
-                Array.from(streamNameList.querySelectorAll('input[type="checkbox"]')).forEach(cb => {
-                    if (cb !== e.target) cb.checked = false;
-                });
-                tabData.streamName = name;
-            } else {
-                tabData.streamName = '';
-            }
-            saveState(state);
-        });
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(name));
-        streamNameList.appendChild(label);
-    });
-} else {
-    streamNameList.innerHTML = '<span class="text-gray-400 text-xs">No hay streams disponibles</span>';
-}
-
-
-// IDs únicos para stream-name
-        const streamNameSection = tabContent.querySelector('.stream-name-section');
-        if (streamNameSection) {
-            const label = streamNameSection.querySelector('label');
-            const select = streamNameSection.querySelector('.stream-select');
-            if (label && select) {
-                if (activeIdx === 0) {
-                    select.id = 'stream-name';
-                    label.htmlFor = 'stream-name';
-                } else {
-                    select.id = `stream-name-cam-${activeIdx}`;
-                    label.htmlFor = select.id;
-                }
-            }
-        }
-
+        
         // Si no es el tab de Stitching (activeIdx !== 0), ocultar campos innecesarios
         if (activeIdx !== 0) {
-
-            
             // Ocultar sección de template (mantener solo stream-name)
             const templateSection = node.querySelector('.container-action');
             if (templateSection) {
@@ -625,80 +588,33 @@ if (Array.isArray(streamsNames) && streamsNames.length > 0) {
             
             // Ocultar sección de alsa device
             const alsaSection = node.querySelector('label[for="alsa-device"]')?.parentElement;
-            if (alsaSection) alsaSection.style.display = 'none';
+            if (alsaSection) {
+                alsaSection.style.display = 'none';
+            }
             
             // Ocultar sección de cámaras
             const cameraSection = node.querySelector('.camera-list');
-            if (cameraSection) cameraSection.style.display = 'none';
-        }else{
-            const alsaDeviceList = tabContent.querySelector('.alsa-device-checkbox-list');
-alsaDeviceList.innerHTML = '';
-if (Array.isArray(alsaDevices) && alsaDevices.length > 0) {
-    alsaDevices.forEach(device => {
-        const label = document.createElement('label');
-        label.className = 'flex items-center gap-2 mb-1 cursor-pointer';
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = device.index;
-        checkbox.checked = tabData.alsaDevice == device.index;
-        checkbox.addEventListener('change', e => {
-            if (e.target.checked) {
-                Array.from(alsaDeviceList.querySelectorAll('input[type="checkbox"]')).forEach(cb => {
-                    if (cb !== e.target) cb.checked = false;
-                });
-                tabData.alsaDevice = device.index;
-            } else {
-                tabData.alsaDevice = '';
+            if (cameraSection) {
+                cameraSection.style.display = 'none';
             }
-            saveState(state);
-        });
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(device.name));
-        alsaDeviceList.appendChild(label);
-    });
-} else {
-    alsaDeviceList.innerHTML = '<span class="text-gray-400 text-xs">No hay dispositivos disponibles</span>';
-}
-
         }
-
-
-
-        // Sincronizar inputs (ya montado)
-       
-
-        // IDs únicos para stream-name y alsa-device
-        const uniqueSuffix = `tab${activeIdx}`;
-        const streamSelect = node.querySelector('.stream-select');
-        const streamLabel = node.querySelector('label[for="stream-name"]');
-        if (streamSelect && streamLabel) {
-            streamSelect.id = `stream-name-${uniqueSuffix}`;
-            streamLabel.htmlFor = streamSelect.id;
-        }
-        const alsaSelect = node.querySelector('.alsa-record-devices');
-        const alsaLabel = node.querySelector('label[for="alsa-device"]');
-        if (alsaSelect && alsaLabel) {
-            alsaSelect.id = `alsa-device-${uniqueSuffix}`;
-            alsaLabel.htmlFor = alsaSelect.id;
-        }
-
-        // Repoblar selects cuando cambias/agregas tab
-        getStreamNames();
-        if (activeIdx === 0) getAlsaDevices();
- setTimeout(() => {
-        const streamSelect = tabContent.querySelector('.stream-select');
-if (streamSelect) {
-    streamSelect.value = tabData.streamName || '';
-    streamSelect.addEventListener('change', (e) => {
-        tabData.streamName = e.target.value;
-        saveState(state);
-        console.log('[stream-select] cambio detectado:', e.target.value);
-    });
-}
+        
+        // Sincronizar inputs
+        setTimeout(() => {
+            // Stream name
+            const streamSelect = document.querySelector('#stream-name');
+            if (streamSelect) {
+                streamSelect.value = tabData.streamName || '';
+                streamSelect.addEventListener('change', e => {
+                    tabData.streamName = e.target.value;
+                    saveState(state);
+                });
+            }
+            
             // Solo mostrar y sincronizar otros campos si es el tab de Stitching
             if (activeIdx === 0) {
                 // Alsa device
-                const alsaSelect = tabContent.querySelector('.alsa-record-devices');
+                const alsaSelect = document.querySelector('#alsa-device');
                 if (alsaSelect) {
                     alsaSelect.value = tabData.alsaDevice || '';
                     alsaSelect.addEventListener('change', e => {
@@ -715,20 +631,20 @@ if (streamSelect) {
                         saveState(state);
                     });
                 }
-                // Cámaras (stitching)
+                // Cámaras
                 const cameraRows = document.querySelectorAll('.camera-list > .camera-card');
                 cameraRows.forEach((row, i) => {
                     const [checkbox, urlInput, select] = row.querySelectorAll('input, select');
                     if (checkbox && urlInput && select) {
                         checkbox.checked = tabData.cameras[i].active;
-                        urlInput.value = tabData.cameras[i].cameraLink;
+                        urlInput.value = tabData.cameras[i].url;
                         select.value = tabData.cameras[i].codec;
                         checkbox.addEventListener('change', e => {
                             tabData.cameras[i].active = e.target.checked;
                             saveState(state);
                         });
                         urlInput.addEventListener('input', e => {
-                            tabData.cameras[i].cameraLink = e.target.value;
+                            tabData.cameras[i].url = e.target.value;
                             saveState(state);
                         });
                         select.addEventListener('change', e => {
@@ -738,34 +654,28 @@ if (streamSelect) {
                     }
                 });
             } else {
-                
-                // sincroniza cámara individual
-                const singleUrl = tabContent.querySelector('[data-single-camera-url="true"]');
-                const singleCodec = tabContent.querySelector('[data-single-camera-codec="true"]');
-                console.log(singleUrl)
+                // Sincronizar campos de cámara individual (no stitching)
+                const singleUrl = document.querySelector('[data-single-camera-url="true"]');
+                const singleCodec = document.querySelector('[data-single-camera-codec="true"]');
                 if (singleUrl) {
                     singleUrl.value = (tabData.camera && tabData.camera.cameraLink) ? tabData.camera.cameraLink : '';
                     singleUrl.addEventListener('input', e => {
-                        const tabIndex = activeIdx === 0 ? 0 : activeIdx - 1;
-                            
-state[tabIndex].camera = state[tabIndex].camera || { cameraLink: '', codec: '264' };
-state[tabIndex].camera.cameraLink = e.target.value;
+                        tabData.camera = tabData.camera || { cameraLink: '', codec: '264' };
+                        tabData.camera.cameraLink = e.target.value;
                         saveState(state);
                     });
                 }
                 if (singleCodec) {
                     singleCodec.value = (tabData.camera && tabData.camera.codec) ? tabData.camera.codec : '264';
                     singleCodec.addEventListener('change', e => {
-                        const tabIndex = activeIdx === 0 ? 0 : activeIdx - 1;
-                    
-state[tabIndex].camera = state[tabIndex].camera || { cameraLink: '', codec: '264' };
-state[tabIndex].camera.codec = e.target.value;
+                        tabData.camera = tabData.camera || { cameraLink: '', codec: '264' };
+                        tabData.camera.codec = e.target.value;
                         saveState(state);
                     });
                 }
             }
-        },0);
-            
+        }, 0);
+        tabContent.appendChild(node);
     }
 
     // Inicializar con estado por defecto si no existe
@@ -774,16 +684,18 @@ state[tabIndex].camera.codec = e.target.value;
         state = [getDefaultSection()];
         saveState(state);
     }
-    // Poblar cachés iniciales y renderizar
-    getStreamNames(render);
-    getAlsaDevices(render);
+    
+    // Inicializar
     render();
-
-    // Debug helper
+    // Si quieres, puedes exponer el render para debug: window.renderCameraSections = render;
+    
+    // Función de debug para ver el estado actual
     window.debugTabs = function() {
         const state = loadState();
         console.log('Estado actual de tabs:', state);
         console.log('Tab activo:', loadActive(state.length));
+        
+        // Debug detallado de cada tab
         state.forEach((tab, index) => {
             console.log(`Tab ${index}:`, {
                 title: tab.title,
@@ -793,12 +705,10 @@ state[tabIndex].camera.codec = e.target.value;
                 cameras: tab.cameras
             });
         });
+        
         return state;
     };
-
-
 })();
-
 
 const allTabs = JSON.parse(localStorage.getItem('camera_config_sections_v1'));
 console.log(allTabs);
@@ -807,102 +717,75 @@ function startProcess() {
     const config = tableInfo();
     // ... tu lógica aquí ...
 }
-function buildStreamsFromState() {
-    const state = JSON.parse(localStorage.getItem('camera_config_sections_v1')) || [];
-    const streams = []; 
-
-    if (state.length === 0) {
-        return { streams };
-    }
-
-    // Tab 0: Stitching
-    const stitching = state[0] || {};
-    const activeCameras = Array.isArray(stitching.cameras)
-        ? stitching.cameras.filter(c => c && c.active && c.cameraLink)
-        : [];
-
-    // if (stitching.streamName && activeCameras.length > 0) {
-    // Tabs 1..N: cámaras individuales
-    for (let i = 1; i < state.length; i++) {
-        const tab = state[i];
-        if (!tab) continue;
-
-        const hasStreamName = !!tab?.streamName;
-        const hasCamera = tab?.camera?.cameraLink;
-
-       
-            streams.push({
-                streamConfiguration: {
-                    needsStitch: false,
-                    cameras: {
-                        cameraLink: tab?.camera?.cameraLink,
-                        codec: tab?.camera?.codec || '264'
-                    },
-                    streamName: tab?.streamName,
-                    // Si ese tab no tiene alsa, usa la del stitching como fallback
-                    audioDevice: tab?.alsaDevice || stitching.alsaDevice || ''
-                }
-            });
-            }
-
-       streams.push({
-           streamConfiguration: {
-               needsStitch: true,
-               cameras: activeCameras.map(e=>({codec:e.codec, cameraLink: e.cameraLink})),
-               streamName: stitching?.streamName,
-               audioDevice: stitching?.alsaDevice || '',
-               templateName: stitching?.templateName || ''
-           }
-       });
-    // }
-
-    return { streams };
-}
 
 function startAllTransmissions() {
     console.log('=== Iniciando startAllTransmissions ===');
-
-    const payload = buildStreamsFromState();
-    console.log('=== Configuración final ===');
-    console.log('Total de streams:', payload.streams.length);
-    console.log('Configuración completa:', payload);
-    axios.get('https://google.com').then(e=>{console.log(e)})
-    axios.post(`http://${SERVER_IP}:${SERVER_PORT}/stitcher/start/`, payload)
-    .then((resp) => {
-        console.log('Respuesta /streams/start:', resp);
+    
+    // Obtener el estado actual del sistema de tabs
+    const state = JSON.parse(localStorage.getItem('camera_config_sections_v1')) || [];
+    console.log('Estado completo de tabs:', state);
+    
+    const streams = [];
+    
+    // Agregar configuración de Stitching (siempre presente)
+    const stitchingConfig = tableInfo();
+    console.log('Configuración de Stitching:', stitchingConfig);
+    
+    if (stitchingConfig.cameras && stitchingConfig.cameras.length > 0) {
+        const activeCameras = stitchingConfig.cameras.filter(cam => cam.active && cam.url);
+        console.log('Cámaras activas en Stitching:', activeCameras);
         
-        alert('Transmisiones iniciadas.');
-    })
-    .catch((err) => {
-        console.error(err);
-        alert(err.message || String(err));
-    });
-    observerStart();
-    // if (!payload.streams.length) {
-    //     alert('No hay streams configurados/activos. Revisa que Stitching tenga cámaras activas con URL y/o que las cámaras individuales tengan streamName + cameraLink.');
-    //     return;
-    // }
-
-    // Enviar TODO lo configurado, sin importar el tab activo
-    // fetch(`http://${SERVER_IP}:${SERVER_PORT}/stitcher/start/`, {
+        if (activeCameras.length > 0) {
+            streams.push({
+                streamConfiguration: {
+                    ...stitchingConfig,
+                  cameras: activeCameras
+                }
+            });
+        }
+    }
+    
+    // Agregar configuraciones de cámaras individuales (tabs adicionales)
+    // Saltamos el primer tab (index 0) porque es el de Stitching
+    console.log('Procesando tabs de cámara individual...');
+    for (let i = 1; i < state.length; i++) {
+        const tab = state[i];
+        console.log(`Tab ${i}:`, tab);
+        
+        if (tab.streamName && tab.camera && tab.camera.cameraLink) {
+            console.log(`Agregando cámara individual: ${tab.streamName} - ${tab.camera.cameraLink}`);
+            streams.push({
+                streamConfiguration: {
+                    needsStitch: false,
+                    camera: {
+                        cameraLink: tab.camera.cameraLink,
+                        codec: tab.camera.codec || '264'
+                    },
+                    streamName: tab.streamName,
+                    audioDevice: stitchingConfig.audioDevice || ''
+                }
+            });
+        } else {
+            console.log(`Tab ${i} no cumple requisitos:`, {
+                hasStreamName: !!tab.streamName,
+                hasCamera: !!tab.camera,
+                hasCameraLink: !!(tab.camera && tab.camera.cameraLink)
+            });
+        }
+    }
+    
+    
+    const finalConfig = { streams: streams };
+    console.log('=== Configuración final ===');
+    console.log('Total de streams:', streams.length);
+    console.log('Configuración completa:', finalConfig);
+    
+    // Aquí puedes enviar finalConfig a tu API
+    // fetch(`http://${SERVER_IP}:${SERVER_PORT}/streams/start/`, {
     //     method: "POST",
-    //     headers: { "Content-type": "application/json; charset=UTF-8" },
-    //     body: {streams: payload},
-    // })
-    // .then((r) => {
-    //     
-    //     if (!r.ok) throw new Error("API request failed");
-
-    //     return r.json();
-    // })
-    // .then((resp) => {
-    //     console.log('Respuesta /streams/start:', resp);
-    //     
-    //     alert('Transmisiones iniciadas.');
-    // })
-    // .catch((err) => {
-    //     console.error(err);
-    //     alert(err.message || String(err));
+    //     body: JSON.stringify(finalConfig),
+    //     headers: {
+    //         "Content-type": "application/json; charset=UTF-8",
+    //     },
     // });
 }
-

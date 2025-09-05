@@ -196,7 +196,7 @@ def takeSnapshotStartCommand(cameras: list):
             universal_newlines=True
         )
         for line in snapshot.stdout:
-            print(line)
+            pass
         return imageName
     except subprocess.CalledProcessError as e:
         raise e

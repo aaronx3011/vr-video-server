@@ -39,8 +39,8 @@ def createApp():
     from routes.publicidad import blueprint
     app.register_blueprint(blueprint.publicidad_bp)
 
-    from routes.playfab import blueprint
-    app.register_blueprint(blueprint.playfab_bp)
+    from routes.vrseat import blueprint
+    app.register_blueprint(blueprint.vrseat_bp)
 
     from routes.file import blueprint
     app.register_blueprint(blueprint.file_bp)

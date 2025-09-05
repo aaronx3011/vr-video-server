@@ -1,14 +1,116 @@
 # Shell commands
+from logging import raiseExceptions
+from os import wait
 import subprocess
 import shlex
 import threading
 
 
+""" COMMAND
+
+gst-launch-1.0 -e \
+    # INPUTS
+
+        # AUDIO
+        alsasrc device=hw:0 ! queue ! audioconvert ! audioresample ! audio/x-raw,rate=48000,channels=2,width=16 ! avenc_aac ! aacparse ! \
+
+
+        # VIDEO
+            # PLANE
+                tee name=at rtmpsrc location=rtmp://192.168.88.46:1950/live/origin1 ! \
+                    flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\) ! glcolorconvert ! video/x-raw\(memory:GLMemory\),format=RGBA ! \
+
+            # FISHEYE
+                tee name=test rtmpsrc location=rtmp://192.168.88.46:1950/live/origin1 ! \
+                    flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\) ! glcolorconvert ! video/x-raw\(memory:GLMemory\),format=RGBA ! \
+                mix. rtmpsrc location=rtmp://192.168.88.46:1950/live/origin1 ! \
+                    flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\) ! glcolorconvert ! video/x-raw\(memory:GLMemory\),format=RGBA ! \
+                mix. rtmpsrc location=rtmp://192.168.88.46:1950/live/origin1 ! \
+                    flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\) ! glcolorconvert ! video/x-raw\(memory:GLMemory\),format=RGBA ! \
+                mix. rtmpsrc location=rtmp://192.168.88.46:1950/live/origin1 ! \
+                    flvdemux ! h264parse ! nvh264dec ! video/x-raw\(memory:GLMemory\) ! glcolorconvert ! video/x-raw\(memory:GLMemory\),format=RGBA ! \
+
+    # STITCH
+        mix. gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/template.pts crop-left=-90 crop-right=90 crop-bottom=-45 crop-top=45 ! video/x-raw\(memory:GLMemory\),format=RGBA,width=7680,height=4320 ! tee name=t t. ! \
+
+    # OUTPUTS
+        queue ! nvh265enc preset = 1 ! h265parse ! queue ! \
+            mux0. at. ! queue ! mpegtsmux name=mux0 ! hlssink target-duration=15 location=videos/high/8kTESTING25MB15S265%05d.ts playlist-location=videos/high/8kTESTING25MB15S265.m3u8 t. ! \
+
+        queue ! glcolorscale ! video/x-raw\(memory:GLMemory\), width=3840, height=2160 ! nvh265enc preset = 1 ! h265parse ! \
+            mux1. at. ! queue ! mpegtsmux name=mux1 ! hlssink target-duration=15 location=videos/high/4kTESTING25MB15S265%05d.ts playlist-location=videos/high/4kTESTING25MB15S265.m3u8 t. ! \
+
+        queue ! glcolorscale ! video/x-raw\(memory:GLMemory\), width=2560, height=1440 ! nvh264enc preset = 1 ! h264parse ! \
+            mux2. at. ! queue ! mpegtsmux name=mux2 ! hlssink target-duration=15 location=videos/low/2kTESTING25MB15S265%05d.ts playlist-location=videos/low/2kTESTING25MB15S265.m3u8 t. ! \
+
+        queue ! glcolorscale ! video/x-raw\(memory:GLMemory\), width=2600, height=900 ! nvh264enc preset = 1 ! h264parse ! \
+            mux3. at. ! queue ! mpegtsmux name=mux3 ! hlssink target-duration=15 location=videos/low/1kTESTING25MB15S265%05d.ts playlist-location=videos/low/1kTESTING25MB15S265.m3u8 test. ! \
+
+        queue ! glcolorscale ! video/x-raw\(memory:GLMemory\), width=3840, height=2160 ! nvh264enc preset = 1 ! h264parse ! \
+            mux4. at. ! queue ! mpegtsmux name=mux4 ! hlssink target-duration=15 location=videos/low/10kTESTING25MB15S265%05d.ts playlist-location=videos/low/10kTESTING25MB15S265.m3u8
 
 """
-=================== COMMAND PARAMS ===================
+
+
+
+
+
+
+""" FRONTEND DATA
+
+{
+    "streams": [
+
+        {"streamConfiguration":
+            {
+                "needsStitch": false,
+                "camera": {"cameraLink": "rtmp://192.168.88.60:1950/live/origin1", "codec": "264"},
+                "streamName": "TESTING25MB15S265",
+                "audioDevice": "0"
+            }
+        },
+        {"streamConfiguration":
+            {
+                "needsStitch": false,
+                "camera": {"cameraLink": "rtmp://192.168.88.60:1950/live/origin1", "codec": "264"},
+                "streamName": "TESTING25MB15S265",
+                "audioDevice": "0"
+            }
+        },
+        {"streamConfiguration":
+            {
+                "needsStitch": false,
+                "camera": {"cameraLink": "rtmp://192.168.88.60:1950/live/origin1", "codec": "264"},
+                "streamName": "TESTING25MB15S265",
+                "audioDevice": "0"
+            }
+        },
+
+
+
+
+        {"streamConfiguration":
+            {
+                "needsStitch": true,
+                "cameras": [
+                    {"cameraLink": "rtmp://192.168.88.60:1950/live/origin1", "codec": "264"},
+                    {"cameraLink": "rtmp://192.168.88.60:1950/live/origin1", "codec": "264"},
+                    {"cameraLink": "rtmp://192.168.88.60:1950/live/origin1", "codec": "264"},
+                    {"cameraLink": "rtmp://192.168.88.60:1950/live/origin1", "codec": "264"}],
+                 "templateName": "LumixFullFrame.pts",
+                 "streamName": "TESTING25MB15S265",
+                 "audioDevice": "0"
+            }
+        }
+    ]
+}
+
 """
 
+
+
+
+""" =================== COMMAND PARAMS =================== """
 
 
 SEPARATOR = " ! "
@@ -16,16 +118,18 @@ QUEUE = "queue ! "
 
 MUX = "mpegtsmux name=MUXNAME"
 
+TEE = "tee name=TEENAME "
+
 DEFAULT_COLOR = "RGBA"
 
 OUTPUT_RESOLUTIONS = ["8k", "4k", "2k", "1k"]
 
+NOT_STITCH_OUTPUT_RESOLUTIONS = ["4k", "1k"]
+
 STITCHER_PIPE = "gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/TEMPLATE crop-left=-90 crop-right=90 crop-bottom=-45 crop-top=45"
 
 # STITCHER_PIPE = "gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/TEMPLATE crop-left=-67 crop-right=67 crop-bottom=-40 crop-top=40"
-
 # STITCHER_PIPE = "gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/TEMPLATE crop-left=-67 crop-right=67 crop-bottom=-20 crop-top=20"
-
 # STITCHER_PIPE = "gldmdstitcher name=mix client=vrinsitu1 template=stitch-templates/TEMPLATE"
 
 STITCHER_FORMAT_PIPE = "video/x-raw(memory:GLMemory),format=RGBA,width=7680,height=4320 ! tee name=t t."
@@ -33,19 +137,19 @@ STITCHER_FORMAT_PIPE = "video/x-raw(memory:GLMemory),format=RGBA,width=7680,heig
 COLOR_CONVERT = "glcolorconvert ! video/x-raw(memory:GLMemory),format=COLORFORMAT"
 COLOR_SCALE = "glcolorscale ! video/x-raw(memory:GLMemory), width=WIDTH, height=HEIGHT"
 
-AUDIO_PIPE = "alsasrc device=hw:DEVICE ! queue ! audioconvert ! audioresample ! audio/x-raw,rate=48000,channels=2,width=16 ! avenc_aac ! aacparse ! tee name=at at."
+AUDIO_PIPE = "alsasrc device=hw:DEVICE ! queue ! audioconvert ! audioresample ! audio/x-raw,rate=48000,channels=2,width=16 ! avenc_aac ! aacparse ! tee name=at "
 
 
 INPUTS_TYPES = [
         {
             "startsWith" : "rtsp://",
             "protocolName" : "RTSP",
-            "pipe" : "rtspsrc location=INPUT"
+            "pipe" : "rtspsrc location=INPUT onvif-mode=true"
         },
         {
             "startsWith" : "rtmp://",
             "protocolName" : "RTMP",
-            "pipe" : "rtmpsrc location=INPUT"
+            "pipe" : "rtmpsrc location=INPUT "
         }
     ]
 
@@ -188,20 +292,15 @@ ENCODE_PIPES = {
 
 VIDEO = {'active': False, 'output': ''}
 
-
-"""
-=================== COMMAND PARAMS END ===================
-"""
+""" =================== COMMAND PARAMS END =================== """
 
 
 
 
 
-"""
------------------------- command generator -----------------------
-"""
+""" ------------------- command generator ------------------- """
 
-def stitcherInputPipeGenerator(inputLink)->tuple:
+def inputPipeGenerator(inputLink)->tuple:
     for inputType in INPUTS_TYPES:
         if inputLink.startswith(inputType["startsWith"]):
             return inputType["pipe"].replace("INPUT", inputLink), inputType["protocolName"]
@@ -212,7 +311,7 @@ def stitcherInputPipeGenerator(inputLink)->tuple:
 
 
 
-def stitcherParsePipeGenerator(inputProtocol, codec)->tuple:
+def parsePipeGenerator(inputProtocol, codec)->tuple:
     for parsePipe in DECODE_PARSE_PIPES:
         if parsePipe["inputProtocol"] == inputProtocol and parsePipe["inputCodec"] == codec:
             return parsePipe["pipe"], parsePipe["inputCodec"]
@@ -221,7 +320,7 @@ def stitcherParsePipeGenerator(inputProtocol, codec)->tuple:
     raise e
 
 
-def stitcherDecorderPipeGenerator(codec)->str:
+def decoderPipeGenerator(codec)->str:
     for decodePipe in DECODE_PIPES:
         if decodePipe["codec"] == codec:
             return decodePipe["pipe"]
@@ -230,8 +329,246 @@ def stitcherDecorderPipeGenerator(codec)->str:
     raise e
 
 
-def stitcherGlColorConvertPipeGenerator(colorFormat):
+def glColorconverPipeGenerator(colorFormat):
     return COLOR_CONVERT.replace("COLORFORMAT", colorFormat)
+
+
+
+def streamCommnadGenerator(streams: list):
+    inputCommand = ""
+    stitchCommand = ""
+    outputCommand = ""
+
+
+    if len(streams) <= 1:
+        stream = streams[0]
+        if stream["streamConfiguration"]["needsStitch"]:
+            stitchCommand = stitcherCommandGenerator(
+                cameras = stream["streamConfiguration"]["cameras"],
+                templateName = stream["streamConfiguration"]["templateName"],
+                streamName = stream["streamConfiguration"]["streamName"],
+                audioDevice = stream["streamConfiguration"]["audioDevice"]
+            )
+            return "gst-launch-1.0 " + stitchCommand
+        else:
+            return "gst-launch-1.0 " + ''.join(
+                notStitchCommandGenerator(
+                    cameras = streams[0]["streamConfiguration"]["cameras"],
+                    streamName = stream["streamConfiguration"]["streamName"],
+                    audioDevice = stream["streamConfiguration"]["audioDevice"]
+                )
+            )
+
+
+    else:
+        streamsWithStitch = 0
+        for stream in streams:
+            if stream["streamConfiguration"]["needsStitch"]:
+                streamsWithStitch += 1
+
+        if streamsWithStitch > 1:
+            raise Exception("Error: More then one camera needs to be stitched")
+            
+        else:
+            streamCounter = 0
+            for stream in streams:
+                if stream["streamConfiguration"]["needsStitch"]:
+                    stitchCommand = stitcherCommandGenerator(
+                        cameras = stream["streamConfiguration"]["cameras"],
+                        templateName = stream["streamConfiguration"]["templateName"],
+                        streamName = stream["streamConfiguration"]["streamName"],
+                        audioDevice = stream["streamConfiguration"]["audioDevice"]
+                    )
+                else:
+                    inputCommand += notStitchCommandGeneratorWithoutAudio(
+                        camera = streams[0]["streamConfiguration"]["cameras"],
+                        streamName = stream["streamConfiguration"]["streamName"],
+                        audioDevice = stream["streamConfiguration"]["audioDevice"],
+                        defaultTeeName = 'notstitchedstream' + str(streamsWithStitch),
+                        defaultMuxName = 'notstitchedmux' + str(streamsWithStitch)
+                    )[0]
+
+                    outputCommand += ' notstitchedstream' + str(streamsWithStitch) + ". " + SEPARATOR + notStitchCommandGeneratorWithoutAudio(
+                        camera = streams[0]["streamConfiguration"]["cameras"],
+                        streamName = stream["streamConfiguration"]["streamName"],
+                        audioDevice = stream["streamConfiguration"]["audioDevice"],
+                        defaultTeeName = 'notstitchedstream' + str(streamsWithStitch),
+                        defaultMuxName = 'notstitchedmux' + str(streamsWithStitch)
+                    )[1]
+
+        streamCounter += 1
+
+
+
+    return "gst-launch-1.0 " + inputCommand + stitchCommand + outputCommand
+
+
+
+def notStitchCommandGeneratorWithoutAudio(
+        camera: dict,
+        streamName:str = 'live',
+        audioDevice:int = 0,
+        outputformat: str = 'hls',
+        outputResolutions: list = NOT_STITCH_OUTPUT_RESOLUTIONS,
+        defaultTeeName: str = 'notstitchedt',
+        defaultMuxName: str = 'notstitchedmux'
+        )->tuple:
+
+    commandString = ""
+    commandFinalString = ""
+    finalOutputPipeCommand = ""
+
+    teeIndex = 0
+
+    cameraIndex = 0
+
+    # Input pipeline
+    cameraLink = camera["cameraLink"]
+    codec = camera["codec"]
+
+    inputCommand, protocol = inputPipeGenerator(cameraLink)
+    inputCommand += SEPARATOR
+    parseCommand, codec = parsePipeGenerator(protocol, codec)
+    inputCommand += parseCommand
+    inputCommand += SEPARATOR
+    inputCommand += decoderPipeGenerator(codec)
+    inputCommand += SEPARATOR
+    inputCommand += glColorconverPipeGenerator(DEFAULT_COLOR)
+    inputCommand += SEPARATOR
+    commandString += inputCommand + TEE.replace("TEENAME", defaultTeeName)
+
+    
+    resolutionIndex = 0
+    for output in OUTPUT_RESOLUTIONS:
+
+        muxName = defaultMuxName + str(resolutionIndex)
+        commandFinalString += QUEUE
+        if resolutionIndex != 0:
+            commandFinalString += COLOR_SCALE.replace("WIDTH", RESOLUTIONS[output]["width"]).replace("HEIGHT", RESOLUTIONS[output]["height"])
+            commandFinalString += SEPARATOR
+        commandFinalString += ENCODE_PIPES[RESOLUTIONS[output]["preferedCodec"]]["pipe"]
+        commandFinalString += SEPARATOR
+
+        if resolutionIndex == 0:
+            commandFinalString += QUEUE
+            commandFinalString += muxName + ". at. "
+
+        else:
+            commandFinalString += f"{muxName}. at. "
+
+        commandFinalString += SEPARATOR
+        commandFinalString += QUEUE
+        commandFinalString += MUX.replace("MUXNAME", muxName)
+        commandFinalString += SEPARATOR
+        commandFinalString += HLS_SINK_PIPES[output]["pipe"].replace("FILENAME", streamName)
+
+        if output != OUTPUT_RESOLUTIONS[-1]:
+            commandFinalString += f" {defaultTeeName}."
+            commandFinalString += SEPARATOR
+
+
+        resolutionIndex += 1
+
+    finalInputPipeCommand = commandString + ""
+
+
+    return finalInputPipeCommand, commandFinalString
+
+
+
+
+
+
+
+
+def notStitchCommandGenerator(
+        cameras: list,
+        streamName:str = 'live',
+        audioDevice:int = 0,
+        outputformat: str = 'hls',
+        outputResolutions: list = NOT_STITCH_OUTPUT_RESOLUTIONS,
+        )->tuple:
+
+    print(cameras)
+
+
+
+    commandString = ""
+    commandFinalString = ""
+    finalOutputPipeCommand = ""
+
+    teeIndex = 0
+
+    cameraIndex = 0
+
+    # Input pipeline
+    for camera in cameras:
+        cameraLink = camera["cameraLink"]
+        codec = camera["codec"]
+
+        inputCommand, protocol = inputPipeGenerator(cameraLink)
+        inputCommand += SEPARATOR
+        parseCommand, codec = parsePipeGenerator(protocol, codec)
+        inputCommand += parseCommand
+        inputCommand += SEPARATOR
+        inputCommand += decoderPipeGenerator(codec)
+        inputCommand += SEPARATOR
+        inputCommand += glColorconverPipeGenerator(DEFAULT_COLOR)
+        inputCommand += SEPARATOR
+        commandString += inputCommand + TEE.replace("TEENAME", "notstitchedt" + str(teeIndex))
+        commandString += SEPARATOR
+
+        
+        resolutionIndex = 0
+        for output in OUTPUT_RESOLUTIONS:
+
+            muxName = "mux" + str(resolutionIndex)
+            commandFinalString += QUEUE
+            if resolutionIndex != 0:
+                commandFinalString += COLOR_SCALE.replace("WIDTH", RESOLUTIONS[output]["width"]).replace("HEIGHT", RESOLUTIONS[output]["height"])
+                commandFinalString += SEPARATOR
+            commandFinalString += ENCODE_PIPES[RESOLUTIONS[output]["preferedCodec"]]["pipe"]
+            commandFinalString += SEPARATOR
+
+            if resolutionIndex == 0:
+                commandFinalString += QUEUE
+                commandFinalString += muxName + ". "
+                commandFinalString += AUDIO_PIPE.replace("DEVICE", str(audioDevice))
+
+            else:
+                commandFinalString +="muxINDEX. at.".replace("INDEX", str(resolutionIndex))
+
+            commandFinalString += SEPARATOR
+            commandFinalString += QUEUE
+            commandFinalString += MUX.replace("MUXNAME", muxName)
+            commandFinalString += SEPARATOR
+            commandFinalString += HLS_SINK_PIPES[output]["pipe"].replace("FILENAME", streamName)
+
+            if output != OUTPUT_RESOLUTIONS[-1]:
+                commandFinalString += f" notstitchedt{str(teeIndex)}."
+                commandFinalString += SEPARATOR
+
+
+            resolutionIndex += 1
+
+
+        teeIndex += 1
+
+
+    finalInputPipeCommand = commandString + ""
+
+
+    # Encoder pipe
+
+
+    for camera in cameras:
+
+
+        cameraIndex += 1
+
+    return finalInputPipeCommand, commandFinalString
+
+
 
 
 
@@ -245,24 +582,25 @@ def stitcherCommandGenerator(
         outputResolutions: list = OUTPUT_RESOLUTIONS
     )->str:
 
-    commandString = "gst-launch-1.0 -e "
+    commandString = AUDIO_PIPE.replace("DEVICE", str(audioDevice))
 
     mixIndex = 0
-    # Input pipe
+
+    # Input pipeline
     for camera in cameras:
         cameraLink = camera["cameraLink"]
         codec = camera["codec"]
         if mixIndex != 0:
             commandString += "mix. "
 
-        inputCommand, protocol = stitcherInputPipeGenerator(cameraLink)
+        inputCommand, protocol = inputPipeGenerator(cameraLink)
         inputCommand += SEPARATOR
-        parseCommand, codec = stitcherParsePipeGenerator(protocol, codec)
+        parseCommand, codec = parsePipeGenerator(protocol, codec)
         inputCommand += parseCommand
         inputCommand += SEPARATOR
-        inputCommand += stitcherDecorderPipeGenerator(codec)
+        inputCommand += decoderPipeGenerator(codec)
         inputCommand += SEPARATOR
-        inputCommand += stitcherGlColorConvertPipeGenerator(DEFAULT_COLOR)
+        inputCommand += glColorconverPipeGenerator(DEFAULT_COLOR)
         inputCommand += SEPARATOR
 
         commandString += inputCommand
@@ -294,8 +632,7 @@ def stitcherCommandGenerator(
 
         if resolutionIndex == 0:
             commandFinalString += QUEUE
-            commandFinalString += muxName + ". "
-            commandFinalString += AUDIO_PIPE.replace("DEVICE", audioDevice)
+            commandFinalString += muxName + ". at. "
 
         else:
             commandFinalString +="muxINDEX. at.".replace("INDEX", str(resolutionIndex))
@@ -314,13 +651,16 @@ def stitcherCommandGenerator(
         resolutionIndex += 1
     return commandFinalString
 
+""" ------------------------ command generator end ----------------------- """
 
-"""
------------------------- command generator end -----------------------
-"""
+
+
+
 
 def stitcherStartCommand(stitcherCommand):
     try:
+        print("================================ STITCHER_START ================================")
+        print(stitcherCommand)
         process = subprocess.Popen(shlex.split(stitcherCommand), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
         for line in process.stdout:
             VIDEO["output"] = line[:-1]
@@ -347,4 +687,5 @@ def stitcherStop():
         subprocess.check_call(['pkill', 'gst'], stdout= subprocess.PIPE)
     except subprocess.CalledProcessError as e:
         raise e
+
 
